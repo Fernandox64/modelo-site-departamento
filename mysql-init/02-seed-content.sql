@@ -73,6 +73,83 @@ CREATE TABLE IF NOT EXISTS people_items (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
+CREATE TABLE IF NOT EXISTS research_labs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    slug VARCHAR(150) NOT NULL UNIQUE,
+    name VARCHAR(180) NOT NULL,
+    summary TEXT NOT NULL,
+    site_url VARCHAR(255) DEFAULT NULL,
+    is_active TINYINT(1) NOT NULL DEFAULT 1,
+    sort_order INT NOT NULL DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS research_projects (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    slug VARCHAR(150) NOT NULL UNIQUE,
+    title VARCHAR(200) NOT NULL,
+    project_type ENUM('pesquisa','extensao') NOT NULL DEFAULT 'pesquisa',
+    summary TEXT NOT NULL,
+    site_url VARCHAR(255) DEFAULT NULL,
+    coordinator VARCHAR(180) DEFAULT NULL,
+    is_active TINYINT(1) NOT NULL DEFAULT 1,
+    sort_order INT NOT NULL DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS site_settings (
+    setting_key VARCHAR(120) NOT NULL PRIMARY KEY,
+    setting_value TEXT NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS ppgcc_page_content (
+    id INT NOT NULL PRIMARY KEY,
+    title VARCHAR(200) NOT NULL,
+    intro_html MEDIUMTEXT NOT NULL,
+    ingresso_html MEDIUMTEXT NOT NULL,
+    editais_html MEDIUMTEXT NOT NULL,
+    grade_html MEDIUMTEXT NOT NULL,
+    docencia_html MEDIUMTEXT NOT NULL,
+    bolsas_html MEDIUMTEXT NOT NULL,
+    graduacao_html MEDIUMTEXT NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS ppgcc_graduates (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    graduate_year INT NOT NULL,
+    student_name VARCHAR(220) NOT NULL,
+    source_url VARCHAR(255) DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY uniq_ppgcc_graduate (graduate_year, student_name)
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS ppgcc_notices (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    slug VARCHAR(160) NOT NULL UNIQUE,
+    title VARCHAR(220) NOT NULL,
+    summary TEXT NOT NULL,
+    notice_type ENUM('edital','informacao') NOT NULL DEFAULT 'edital',
+    notice_url VARCHAR(255) DEFAULT NULL,
+    is_active TINYINT(1) NOT NULL DEFAULT 1,
+    published_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS ppgcc_selection_items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    group_title VARCHAR(255) NOT NULL,
+    item_title VARCHAR(255) NOT NULL,
+    item_url VARCHAR(600) NOT NULL,
+    item_hash CHAR(64) NOT NULL UNIQUE,
+    sort_order INT NOT NULL DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
 DELETE FROM news_items
 WHERE slug IN (
     'portal-em-teste',
@@ -100,6 +177,9 @@ WHERE slug IN (
 
 DELETE FROM people_items
 WHERE role_type = 'docente';
+
+DELETE FROM research_labs;
+DELETE FROM research_projects;
 
 INSERT INTO news_items (slug, title, summary, category, content, image, published_at) VALUES
 ('qualificacao-mestrado-eduardo-henke-2026-03-26','Qualificacao de mestrado do discente Eduardo Henke, dia 26/03 as 14:00.','Aviso publicado no acervo de noticias do DECOM-UFOP.','Pesquisa','Comunicado academico referente a qualificacao de mestrado divulgada no portal oficial do departamento.','/assets/cards/noticia-pesquisa.svg','2026-03-26 14:00:00'),
@@ -196,3 +276,79 @@ ON DUPLICATE KEY UPDATE
     interests = VALUES(interests),
     bio = VALUES(bio),
     sort_order = VALUES(sort_order);
+
+INSERT INTO research_labs (slug, name, summary, site_url, is_active, sort_order) VALUES
+('csilab','CSILab','Laboratorio de Computacao de Sistemas Inteligentes.','https://csilab.ufop.br/',1,1),
+('gaid','GAID','Laboratorio Tematico em Gerencia e Analise Inteligente de Dados.','http://www.decom.ufop.br/gaid/',1,2),
+('goal','GOAL','Laboratorio Tematico em Otimizacao e Algoritmos.','http://www.goal.ufop.br',1,3),
+('imobilis','iMobilis','Laboratorio Tematico em Computacao Movel.','http://www2.decom.ufop.br/imobilis/',1,4),
+('kryptolab','KryptoLab','Laboratorio de Criptografia e Seguranca de Redes.','https://kryptolab.decom.ufop.br',1,5),
+('lcad','LCAD','Laboratorio de Computacao Aplicada e Desenvolvimento.','https://lcad.ufop.br/',1,6),
+('lapdi','LaPDI','Laboratorio Tematico em Processamento de Imagens.','http://www.decom.ufop.br/lapdi/',1,7),
+('terralab','TerraLab','Laboratorio Tematico em Simulacao e Geoprocessamento.','http://www.decom.ufop.br/terralab/',1,8),
+('xr4good','XR4Good','Laboratorio Tematico de Realidade Estendida.','http://xr4goodlab.decom.ufop.br/',1,9)
+ON DUPLICATE KEY UPDATE
+    name = VALUES(name),
+    summary = VALUES(summary),
+    site_url = VALUES(site_url),
+    is_active = VALUES(is_active),
+    sort_order = VALUES(sort_order);
+
+INSERT INTO research_projects (slug, title, project_type, summary, site_url, coordinator, is_active, sort_order) VALUES
+('ia-apoio-ao-ensino','IA aplicada ao apoio ao ensino','pesquisa','Projeto focado em modelos de aprendizado de maquina para suporte a atividades educacionais.','','DECOM/UFOP',1,1),
+('visao-computacional-saude','Visao computacional para aplicacoes em saude','pesquisa','Pesquisa em analise de imagens e reconhecimento de padroes aplicada a contextos de saude.','','DECOM/UFOP',1,2),
+('cultura-digital-e-formacao','Cultura digital e formacao em tecnologia','extensao','Projeto de extensao com oficinas e atividades para aproximar comunidade e computacao.','','DECOM/UFOP',1,3),
+('programacao-para-escolas','Programacao para escolas publicas','extensao','Acoes extensionistas de ensino de programacao e pensamento computacional para estudantes da rede publica.','','DECOM/UFOP',1,4)
+ON DUPLICATE KEY UPDATE
+    title = VALUES(title),
+    project_type = VALUES(project_type),
+    summary = VALUES(summary),
+    site_url = VALUES(site_url),
+    coordinator = VALUES(coordinator),
+    is_active = VALUES(is_active),
+    sort_order = VALUES(sort_order);
+
+INSERT INTO site_settings (setting_key, setting_value) VALUES
+('menu_graduacao_label','Graduacao'),
+('menu_graduacao_url','/ensino/ciencia-computacao.php'),
+('menu_pos_graduacao_label','Pos-graduacao'),
+('menu_pos_graduacao_url','/ensino/pos-graduacao.php')
+ON DUPLICATE KEY UPDATE
+    setting_value = VALUES(setting_value);
+
+INSERT INTO ppgcc_page_content
+    (id, title, intro_html, ingresso_html, editais_html, grade_html, docencia_html, bolsas_html, graduacao_html)
+VALUES
+    (
+        1,
+        'Pos-graduacao em Computacao',
+        '<p>O PPGCC/UFOP oferece Mestrado e Doutorado em Ciencia da Computacao, com foco em pesquisa, inovacao tecnologica e formacao docente.</p>',
+        '<p>O ingresso ocorre por edital de processo seletivo para cada nivel, com criterios e cronograma publicados oficialmente.</p>',
+        '<p>O programa publica editais de ingresso, bolsas e chamadas academicas ao longo do ano.</p>',
+        '<p>A grade contempla disciplinas basicas e eletivas, com creditos minimos para mestrado e doutorado.</p>',
+        '<p>O estagio em docencia segue regras institucionais e do programa.</p>',
+        '<p>Bolsas e auxilios sao regidos por editais e disponibilidade institucional.</p>',
+        '<p>Alunos da graduacao podem cursar disciplinas isoladas conforme regras e calendario semestral.</p>'
+    )
+ON DUPLICATE KEY UPDATE
+    title = VALUES(title),
+    intro_html = VALUES(intro_html),
+    ingresso_html = VALUES(ingresso_html),
+    editais_html = VALUES(editais_html),
+    grade_html = VALUES(grade_html),
+    docencia_html = VALUES(docencia_html),
+    bolsas_html = VALUES(bolsas_html),
+    graduacao_html = VALUES(graduacao_html);
+
+INSERT INTO ppgcc_notices (slug, title, summary, notice_type, notice_url, is_active, published_at) VALUES
+('ppgcc-04-2025-ingresso-2026','Edital PPGCC 04/2025 - Ingresso 2026 (Mestrado e Doutorado)','Processo seletivo para ingresso no PPGCC com vagas para Mestrado e Doutorado.','edital','https://www3.decom.ufop.br/pos/processoseletivo/',1,'2025-10-01 09:00:00'),
+('ppgcc-02-2026-bolsas-doutorado','Edital PPGCC 02/2026 - Classificacao para bolsas de Doutorado','Chamada para classificacao de discentes de doutorado para manutencao de bolsas (dedicacao parcial).','edital','https://www3.decom.ufop.br/pos/processoseletivo/',1,'2026-03-01 09:00:00'),
+('ppgcc-01-2026-pdse','Edital PPGCC 01/2026 - PDSE Doutorado Sanduiche','Selecao interna para o Programa Institucional de Doutorado Sanduiche no Exterior.','edital','https://www3.decom.ufop.br/pos/processoseletivo/',1,'2026-02-10 09:00:00'),
+('calendario-isoladas-ppgcc','Calendario e orientacoes de matricula em disciplinas isoladas','Informes para matricula, incluindo orientacao para alunos de graduacao interessados em disciplinas isoladas.','informacao','https://www3.decom.ufop.br/pos/noticias/',1,'2026-01-25 09:00:00')
+ON DUPLICATE KEY UPDATE
+    title = VALUES(title),
+    summary = VALUES(summary),
+    notice_type = VALUES(notice_type),
+    notice_url = VALUES(notice_url),
+    is_active = VALUES(is_active),
+    published_at = VALUES(published_at);

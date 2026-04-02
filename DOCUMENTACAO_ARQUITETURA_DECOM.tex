@@ -1,0 +1,211 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{geometry}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{hyperref}
+\geometry{margin=2.5cm}
+
+\title{Documentacao Tecnica do Portal DECOM/UFOP}
+\author{Projeto DECOM - Site Institucional}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Objetivo do documento}
+Este documento descreve, de forma consolidada, o que foi implementado no portal institucional do DECOM/UFOP ate o momento. O foco e registrar:
+\begin{itemize}
+    \item arquitetura adotada;
+    \item modelos de dados implementados;
+    \item recursos visuais (CSS e componentes);
+    \item menus publicos e administrativos;
+    \item motivos tecnicos para uma arquitetura limpa, leve e de baixo consumo de recursos.
+\end{itemize}
+
+\section{Visao geral da solucao}
+O sistema foi estruturado como um portal PHP com Docker, com persistencia em MySQL e painel administrativo para secretaria e equipe interna.
+
+\subsection{Princpios arquiteturais}
+\begin{itemize}
+    \item \textbf{Arquitetura clean e leve}: separacao clara entre camada de apresentacao (paginas PHP), regras de negocio utilitarias (funcoes em \texttt{includes/config.php}) e dados (MySQL).
+    \item \textbf{Simplicidade operacional}: execucao em containers com poucos servicos e configuracao direta.
+    \item \textbf{Baixo custo computacional}: sem framework pesado no runtime principal; paginas renderizadas no servidor com consultas simples e indexadas.
+    \item \textbf{Manutenibilidade}: painel admin para reduzir alteracoes manuais em codigo (conteudo, menu, pos-graduacao, egressos, noticias, editais etc.).
+\end{itemize}
+
+\subsection{Motivacao para a escolha}
+A arquitetura foi escolhida para ambientes de servidor com recursos simples, onde e importante:
+\begin{itemize}
+    \item consumir pouca memoria e CPU;
+    \item reduzir complexidade de deploy;
+    \item facilitar suporte tecnico local;
+    \item manter tempo de resposta adequado com stack enxuta.
+\end{itemize}
+
+\section{Stack e software livre utilizado}
+\subsection{Infraestrutura}
+\begin{itemize}
+    \item \textbf{Docker / Docker Compose} para orquestracao.
+    \item \textbf{PHP 8.2 + Apache} como aplicacao web.
+    \item \textbf{MySQL 8 Community} como banco de dados.
+    \item \textbf{phpMyAdmin} para administracao do banco.
+\end{itemize}
+
+\subsection{Frontend e UI}
+\begin{itemize}
+    \item \textbf{Bootstrap 5} (CDN) para layout responsivo.
+    \item \textbf{AdminLTE 4} (CDN) para painel administrativo.
+    \item \textbf{TinyMCE} (modo gratuito/comunitario) para edicao rica de conteudo no admin.
+\end{itemize}
+
+\subsection{Observacao de licenciamento}
+Foi priorizado o uso de tecnologias abertas, amplamente adotadas e com opcoes gratuitas de uso em ambiente institucional, favorecendo sustentabilidade tecnica e baixo custo.
+
+\section{Arquitetura de pastas (principal)}
+\begin{itemize}
+    \item \texttt{app/}: codigo principal do portal.
+    \item \texttt{app/includes/}: configuracao global e layout base (header/footer).
+    \item \texttt{app/admin/}: painel administrativo.
+    \item \texttt{app/noticias/}, \texttt{app/ensino/}, \texttt{app/decom/}, \texttt{app/pesquisa/}, \texttt{app/pessoal/}: modulos publicos.
+    \item \texttt{app/scripts/}: scripts de importacao/populacao.
+    \item \texttt{mysql-init/}: estrutura inicial do banco e seeds.
+\end{itemize}
+
+\section{Modelos implementados (banco de dados)}
+As tabelas principais implementadas incluem:
+
+\begin{longtable}{|p{5cm}|p{9cm}|}
+\hline
+\textbf{Tabela} & \textbf{Finalidade} \\
+\hline
+\texttt{news_items} & Noticias institucionais \\
+\hline
+\texttt{edital_items} & Editais gerais do departamento \\
+\hline
+\texttt{defesa_items} & Defesas (TCC, mestrado, doutorado etc.) \\
+\hline
+\texttt{job_items} & Estagios e empregos \\
+\hline
+\texttt{people_items} & Docentes e funcionarios (com dados de perfil e foto) \\
+\hline
+\texttt{research_labs} & Laboratorios de pesquisa \\
+\hline
+\texttt{research_projects} & Projetos de pesquisa/extensao \\
+\hline
+\texttt{site_settings} & Configuracoes editaveis do menu principal \\
+\hline
+\texttt{ppgcc_page_content} & Conteudo institucional da pagina de pos-graduacao \\
+\hline
+\texttt{ppgcc_graduates} & Formandos/egressos da pos por ano \\
+\hline
+\texttt{ppgcc_notices} & Editais e informes especificos da pos-graduacao \\
+\hline
+\end{longtable}
+
+\section{CSS e padrao visual utilizado}
+\subsection{CSS base do site publico}
+O portal utiliza Bootstrap 5 com customizacao leve no \texttt{header.php}, incluindo:
+\begin{itemize}
+    \item topbar institucional;
+    \item cards com sombra suave (\texttt{news-card});
+    \item capas de imagem padronizadas (\texttt{news-card-cover});
+    \item cores consistentes para identidade institucional.
+\end{itemize}
+
+\subsection{CSS do painel admin}
+No admin foi adotado AdminLTE 4 com Bootstrap 5 para:
+\begin{itemize}
+    \item sidebar fixa;
+    \item navegação por modulos;
+    \item formularios administrativos padronizados;
+    \item tabela de gerenciamento (CRUD).
+\end{itemize}
+
+\section{Menus implementados}
+\subsection{Menu publico (site)}
+Menu principal em \texttt{app/includes/header.php}, com secoes:
+\begin{itemize}
+    \item Inicio
+    \item DECOM
+    \item Noticias e Eventos
+    \item Pessoal
+    \item Ensino (incluindo Pos-graduacao em Computacao)
+    \item Graduacao (editavel)
+    \item Pos-graduacao (editavel)
+    \item Pesquisa
+    \item Extensao
+    \item Contato
+\end{itemize}
+
+\subsection{Menu administrativo}
+Painel administrativo com os modulos:
+\begin{itemize}
+    \item Dashboard
+    \item Noticias
+    \item Editais
+    \item Defesas
+    \item Estagios e Empregos
+    \item Pessoal
+    \item Menu Principal
+    \item Pos-graduacao
+\end{itemize}
+
+\section{Onde entrar para editar (secretaria)}
+\subsection{Acesso admin}
+\begin{itemize}
+    \item URL: \texttt{/admin/login.php}
+    \item Dashboard: \texttt{/admin/dashboard.php}
+\end{itemize}
+
+\subsection{Edicoes por modulo}
+\begin{itemize}
+    \item Noticias/Editais/Defesas/Estagios: \texttt{/admin/content.php?type=...}
+    \item Pessoal (docentes/funcionarios): \texttt{/admin/pessoal.php}
+    \item Menu principal (Graduacao/Pos-graduacao): \texttt{/admin/menu.php}
+    \item Pos-graduacao (conteudo, editais da pos, egressos por ano): \texttt{/admin/pos-graduacao.php}
+\end{itemize}
+
+\section{Modulo de Pos-graduacao implementado}
+Foi implementado um modulo interno completo no site do DECOM, sem dependencia de pagina externa, com:
+\begin{itemize}
+    \item pagina publica da pos em \texttt{/ensino/pos-graduacao.php};
+    \item secoes editaveis no admin (ingresso, editais, grade, docencia, bolsas, facilidades para graduacao);
+    \item listagem de formandos/egressos com paginacao por ano;
+    \item editais/informes da pos com exibicao na propria pagina e na home.
+\end{itemize}
+
+\section{Home page dinamica para a Pos}
+A pagina inicial passou a exibir bloco da pos-graduacao com:
+\begin{itemize}
+    \item resumo institucional;
+    \item ultimos editais/informes da selecao;
+    \item link direto para a pagina completa da pos.
+\end{itemize}
+Todo esse conteudo e gerenciavel via painel admin.
+
+\section{Racional de desempenho e baixo consumo}
+As decisoes tecnicas priorizam ambiente institucional com recursos modestos:
+\begin{itemize}
+    \item consultas SQL diretas e simples;
+    \item renderizacao server-side sem SPA pesada;
+    \item baixa quantidade de dependencias de runtime;
+    \item containerizacao simples (app + db + phpmyadmin);
+    \item facilidade de backup e manutencao operacional.
+\end{itemize}
+Com isso, o portal permanece funcional, rapido e sustentavel em servidores com CPU e memoria limitados.
+
+\section{Conclusao}
+O portal DECOM foi evoluido para um modelo institucional dinamico, com administracao centralizada para secretaria, arquitetura limpa e baixa complexidade operacional. A solucao adota tecnologias livres ou com uso gratuito consolidado, mantendo foco em desempenho, simplicidade e autonomia de manutencao.
+
+\section*{Como compilar este documento}
+No diretorio do projeto:
+\begin{verbatim}
+pdflatex DOCUMENTACAO_ARQUITETURA_DECOM.tex
+\end{verbatim}
+
+\end{document}

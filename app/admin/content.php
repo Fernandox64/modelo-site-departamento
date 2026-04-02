@@ -204,6 +204,8 @@ $items = $itemsStmt->fetchAll();
                     <li class="nav-item"><a href="/admin/content.php?type=defesas" class="nav-link<?= $type === 'defesas' ? ' active' : '' ?>"><p>Defesas</p></a></li>
                     <li class="nav-item"><a href="/admin/content.php?type=estagios" class="nav-link<?= $type === 'estagios' ? ' active' : '' ?>"><p>Estagios e Empregos</p></a></li>
                     <li class="nav-item"><a href="/admin/pessoal.php" class="nav-link"><p>Pessoal</p></a></li>
+                    <li class="nav-item"><a href="/admin/menu.php" class="nav-link"><p>Menu Principal</p></a></li>
+                    <li class="nav-item"><a href="/admin/pos-graduacao.php" class="nav-link"><p>Pos-graduacao</p></a></li>
                 </ul>
             </nav>
         </div>
