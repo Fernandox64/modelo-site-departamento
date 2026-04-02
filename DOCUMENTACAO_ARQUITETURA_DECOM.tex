@@ -111,13 +111,35 @@ As tabelas principais implementadas incluem:
 
 \section{CSS e padrao visual utilizado}
 \subsection{CSS base do site publico}
-O portal utiliza Bootstrap 5 com customizacao leve no \texttt{header.php}, incluindo:
+O portal utiliza Bootstrap 5 com customizacao leve e centralizada no arquivo:
+\begin{center}
+\texttt{app/assets/css/theme.css}
+\end{center}
+Esse arquivo foi criado para facilitar manutencao de cores em um unico local.
+
+Paleta oficial configurada (variaveis CSS):
+\begin{itemize}
+    \item \texttt{\#FFDE42} / \texttt{rgb(255, 222, 66)}
+    \item \texttt{\#53CBF3} / \texttt{rgb(83, 203, 243)}
+    \item \texttt{\#5478FF} / \texttt{rgb(84, 120, 255)}
+    \item \texttt{\#111FA2} / \texttt{rgb(17, 31, 162)}
+\end{itemize}
+
+O \texttt{header.php} apenas referencia esse CSS global, incluindo:
 \begin{itemize}
     \item topbar institucional;
+    \item navbar principal (Bootstrap) com paleta do DECOM;
     \item cards com sombra suave (\texttt{news-card});
     \item capas de imagem padronizadas (\texttt{news-card-cover});
     \item cores consistentes para identidade institucional.
 \end{itemize}
+
+\subsection{Como alterar cores rapidamente}
+Para mudar a identidade visual no futuro, editar somente o bloco \texttt{:root} em:
+\begin{center}
+\texttt{app/assets/css/theme.css}
+\end{center}
+As variaveis (\texttt{--decom-yellow}, \texttt{--decom-cyan}, \texttt{--decom-blue}, \texttt{--decom-navy}) propagam automaticamente para menu, botoes, titulos e cards.
 
 \subsection{CSS do painel admin}
 No admin foi adotado AdminLTE 4 com Bootstrap 5 para:

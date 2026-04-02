@@ -107,6 +107,427 @@ function site_setting_set(string $key, string $value): void {
     );
     $stmt->execute([':k' => $key, ':v' => $value]);
 }
+function horarios_cc_2026_template_html(): string {
+    return <<<'HTML'
+<h2>Horarios de Aula - Bacharelado em Ciencia da Computacao (2026-1)</h2>
+<p><strong>Acesso Rapido:</strong> 1o, 2o, 3o, 4o, 5o, 6o, 7o, 8o periodo e Eletivas.</p>
+
+<h3>1o Periodo</h3>
+<div class="table-responsive">
+<table class="table table-bordered table-sm align-middle">
+<thead><tr><th>Horario</th><th>Segunda</th><th>Terca</th><th>Quarta</th><th>Quinta</th><th>Sexta</th><th>Sabado</th></tr></thead>
+<tbody>
+<tr><td>07:30 - 09:10</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>08:20 - 10:00</td><td></td><td>BCC201</td><td></td><td>BCC201</td><td></td><td></td></tr>
+<tr><td>10:10 - 11:50</td><td></td><td>BCC201</td><td></td><td>BCC201</td><td></td><td></td></tr>
+<tr><td>13:30 - 15:10</td><td>BCC109 (P) / BCC265 (P)</td><td>BCC109 / BCC265</td><td>BCC201 (P)</td><td>BCC109 / BCC265</td><td></td><td></td></tr>
+<tr><td>15:20 - 17:00</td><td></td><td></td><td>BCC201 (P)</td><td></td><td>BCC501</td><td></td></tr>
+<tr><td>17:10 - 18:50</td><td>BCC109 (P) / BCC201 / BCC265 (P)</td><td>BCC201 (P)</td><td>BCC201</td><td></td><td></td><td></td></tr>
+<tr><td>19:00 - 20:40</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>21:00 - 22:40</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+</tbody>
+</table>
+</div>
+<p><small>BCC109 - Eletronica para Computacao | BCC201 - Introducao a Programacao | BCC265 - Eletronica para Computacao | BCC501 - Introducao a Ciencia da Computacao | MTM122 - Calculo Diferencial e Integral I | MTM131 - Geometria Analitica e Calculo Vetorial</small></p>
+
+<h3>2o Periodo</h3>
+<div class="table-responsive">
+<table class="table table-bordered table-sm align-middle">
+<thead><tr><th>Horario</th><th>Segunda</th><th>Terca</th><th>Quarta</th><th>Quinta</th><th>Sexta</th><th>Sabado</th></tr></thead>
+<tbody>
+<tr><td>07:30 - 09:10</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>08:20 - 10:00</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>10:10 - 11:50</td><td>BCC324</td><td>BCC101 / BCC202</td><td>BCC324</td><td>BCC101 / BCC202</td><td></td><td></td></tr>
+<tr><td>13:30 - 15:10</td><td>BCC101</td><td>BCC266</td><td>BCC101</td><td>BCC266</td><td></td><td></td></tr>
+<tr><td>15:20 - 17:00</td><td></td><td></td><td></td><td></td><td>BCC202 (P)</td><td></td></tr>
+<tr><td>17:10 - 18:50</td><td></td><td></td><td></td><td></td><td>BCC202 (P)</td><td></td></tr>
+<tr><td>19:00 - 20:40</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>21:00 - 22:40</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+</tbody>
+</table>
+</div>
+<p><small>BCC101 - Matematica Discreta I | BCC202 - Estruturas de Dados I | BCC266 - Organizacao de Computadores | BCC324 - Interacao Humano-Computador | MTM123 - Calculo Diferencial e Integral II</small></p>
+
+<h3>3o Periodo</h3>
+<div class="table-responsive">
+<table class="table table-bordered table-sm align-middle">
+<thead><tr><th>Horario</th><th>Segunda</th><th>Terca</th><th>Quarta</th><th>Quinta</th><th>Sexta</th><th>Sabado</th></tr></thead>
+<tbody>
+<tr><td>07:30 - 09:10</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>08:20 - 10:00</td><td>BCC222</td><td></td><td>BCC222 (P)</td><td></td><td></td><td></td></tr>
+<tr><td>10:10 - 11:50</td><td></td><td>BCC203</td><td>BCC222 (P)</td><td>BCC203</td><td></td><td></td></tr>
+<tr><td>13:30 - 15:10</td><td>BCC102</td><td>BCC263</td><td>BCC102</td><td>BCC263</td><td></td><td></td></tr>
+<tr><td>15:20 - 17:00</td><td></td><td>BCC221</td><td></td><td>BCC221</td><td></td><td></td></tr>
+<tr><td>17:10 - 18:50</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>19:00 - 20:40</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>21:00 - 22:40</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+</tbody>
+</table>
+</div>
+<p><small>BCC102 - Matematica Discreta II | BCC203 - Estrutura de Dados II | BCC221 - Programacao Orientada a Objetos | BCC222 - Programacao Funcional | BCC263 - Arquitetura de Computadores | MTM112 - Introducao a Algebra Linear</small></p>
+
+<h3>4o Periodo</h3>
+<div class="table-responsive">
+<table class="table table-bordered table-sm align-middle">
+<thead><tr><th>Horario</th><th>Segunda</th><th>Terca</th><th>Quarta</th><th>Quinta</th><th>Sexta</th><th>Sabado</th></tr></thead>
+<tbody>
+<tr><td>07:30 - 09:10</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>08:20 - 10:00</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>10:10 - 11:50</td><td>BCC204</td><td>BCC361</td><td>BCC204</td><td>BCC361</td><td></td><td></td></tr>
+<tr><td>13:30 - 15:10</td><td></td><td>BCC264</td><td></td><td>BCC264</td><td></td><td></td></tr>
+<tr><td>15:20 - 17:00</td><td>BCC760 (P)</td><td>BCC322</td><td>BCC760</td><td>BCC322</td><td></td><td></td></tr>
+<tr><td>17:10 - 18:50</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>19:00 - 20:40</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>21:00 - 22:40</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+</tbody>
+</table>
+</div>
+<p><small>BCC204 - Teoria dos Grafos | BCC264 - Sistemas Operacionais | BCC322 - Engenharia de Software I | BCC361 - Redes de Computadores | BCC760 - Calculo Numerico | EST202 - Estatistica e Probabilidade</small></p>
+
+<h3>5o Periodo</h3>
+<div class="table-responsive">
+<table class="table table-bordered table-sm align-middle">
+<thead><tr><th>Horario</th><th>Segunda</th><th>Terca</th><th>Quarta</th><th>Quinta</th><th>Sexta</th><th>Sabado</th></tr></thead>
+<tbody>
+<tr><td>07:30 - 09:10</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>08:20 - 10:00</td><td>BCC323</td><td></td><td>BCC323</td><td></td><td></td><td></td></tr>
+<tr><td>10:10 - 11:50</td><td>BCC244</td><td>BCC362</td><td>BCC244</td><td>BCC362</td><td></td><td></td></tr>
+<tr><td>13:30 - 15:10</td><td>BCC241</td><td>BCC321</td><td>BCC241</td><td>BCC321</td><td></td><td></td></tr>
+<tr><td>15:20 - 17:00</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>17:10 - 18:50</td><td></td><td></td><td></td><td></td><td>BCC502</td><td></td></tr>
+<tr><td>19:00 - 20:40</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>21:00 - 22:40</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+</tbody>
+</table>
+</div>
+<p><small>BCC241 - Projeto e Analise de Algoritmos | BCC244 - Teoria da Computacao | BCC321 - Banco de Dados I | BCC323 - Engenharia de Software II | BCC362 - Sistemas Distribuidos | BCC502 - Metodologia Cientifica em Ciencia da Computacao</small></p>
+
+<h3>6o Periodo</h3>
+<div class="table-responsive">
+<table class="table table-bordered table-sm align-middle">
+<thead><tr><th>Horario</th><th>Segunda</th><th>Terca</th><th>Quarta</th><th>Quinta</th><th>Sexta</th><th>Sabado</th></tr></thead>
+<tbody>
+<tr><td>07:30 - 09:10</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>08:20 - 10:00</td><td>BCC328</td><td></td><td>BCC328</td><td></td><td></td><td></td></tr>
+<tr><td>10:10 - 11:50</td><td></td><td>BCC342</td><td></td><td>BCC342</td><td></td><td></td></tr>
+<tr><td>13:30 - 15:10</td><td>BCC325</td><td>BCC326</td><td>BCC325</td><td>BCC326</td><td></td><td></td></tr>
+<tr><td>15:20 - 17:00</td><td>BCC327</td><td></td><td>BCC327</td><td></td><td></td><td></td></tr>
+<tr><td>17:10 - 18:50</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>19:00 - 20:40</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>21:00 - 22:40</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+</tbody>
+</table>
+</div>
+<p><small>BCC325 - Inteligencia Artificial | BCC326 - Processamento de Imagens | BCC327 - Computacao Grafica | BCC328 - Construcao de Compiladores I | BCC342 - Introducao a Otimizacao</small></p>
+
+<h3>7o Periodo</h3>
+<div class="table-responsive">
+<table class="table table-bordered table-sm align-middle">
+<thead><tr><th>Horario</th><th>Segunda</th><th>Terca</th><th>Quarta</th><th>Quinta</th><th>Sexta</th><th>Sabado</th></tr></thead>
+<tbody>
+<tr><td>07:30 - 09:10</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>08:20 - 10:00</td><td></td><td></td><td></td><td></td><td></td><td>BCC392</td></tr>
+<tr><td>10:10 - 11:50</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>13:30 - 15:10</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>15:20 - 17:00</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>17:10 - 18:50</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>19:00 - 20:40</td><td></td><td>BCC503</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>21:00 - 22:40</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+</tbody>
+</table>
+</div>
+<p><small>BCC392 - Monografia I | BCC503 - Informatica e Sociedade | FIL101 - Introducao a Historia da Filosofia</small></p>
+
+<h3>8o Periodo</h3>
+<div class="table-responsive">
+<table class="table table-bordered table-sm align-middle">
+<thead><tr><th>Horario</th><th>Segunda</th><th>Terca</th><th>Quarta</th><th>Quinta</th><th>Sexta</th><th>Sabado</th></tr></thead>
+<tbody>
+<tr><td>07:30 - 09:10</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>08:20 - 10:00</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>10:10 - 11:50</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>13:30 - 15:10</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>15:20 - 17:00</td><td></td><td></td><td></td><td></td><td></td><td>BCC393</td></tr>
+<tr><td>17:10 - 18:50</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>19:00 - 20:40</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>21:00 - 22:40</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+</tbody>
+</table>
+</div>
+<p><small>BCC393 - Monografia II | DIR260 - Direito da Informatica</small></p>
+
+<h3>Disciplinas Eletivas (oferecidas em 2026-1)</h3>
+<div class="table-responsive">
+<table class="table table-bordered table-sm align-middle">
+<thead><tr><th>Horario</th><th>Segunda</th><th>Terca</th><th>Quarta</th><th>Quinta</th><th>Sexta</th><th>Sabado</th></tr></thead>
+<tbody>
+<tr><td>07:30 - 09:10</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>08:20 - 10:00</td><td>BCC444</td><td>BCC409 / BCC447</td><td>BCC444</td><td>BCC409 / BCC447</td><td></td><td></td></tr>
+<tr><td>10:10 - 11:50</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>13:30 - 15:10</td><td>BCC109 (P) / BCC404 / BCC463 / BCC481</td><td>BCC109 / BCC443</td><td>BCC404 / BCC463 / BCC481</td><td>BCC109 / BCC443</td><td></td><td></td></tr>
+<tr><td>15:20 - 17:00</td><td></td><td>BCC421 / BCC423 / BCC448</td><td></td><td>BCC421 / BCC423 / BCC448</td><td></td><td></td></tr>
+<tr><td>17:10 - 18:50</td><td>BCC109 (P) / BCC402</td><td></td><td>BCC402</td><td></td><td>BCC425 (P)</td><td></td></tr>
+<tr><td>19:00 - 20:40</td><td>BCC465</td><td></td><td>BCC465</td><td></td><td></td><td></td></tr>
+<tr><td>21:00 - 22:40</td><td></td><td></td><td>BCC425</td><td></td><td>BCC425 (P)</td><td></td></tr>
+</tbody>
+</table>
+</div>
+<p><small>BCC109 - Eletronica para Computacao | BCC402 - Algoritmos e Programacao Avancada | BCC404 - Logica Aplicada a Computacao | BCC409 - Sistemas de Recomendacao | BCC421 - Computacao Movel | BCC423 - Criptografia e Seguranca de Sistemas | BCC425 - Sistemas Embutidos | BCC443 - Geoprocessamento e SIG | BCC444 - Mineracao de Dados | BCC447 - Programacao Paralela | BCC448 - Reconhecimento de Padroes | BCC463 - Otimizacao em Redes | BCC465 - Tecnicas de Otimizacao Multi-objetivo | BCC481 - Programacao Web</small></p>
+HTML;
+}
+function horarios_cc_2026_outras_eletivas_html(): string {
+    return <<<'HTML'
+<h3>Outras eletivas (nao oferecidas em 2026-1)</h3>
+<ul>
+<li>BCC113 - Introducao ao Aprendizado de Maquina</li>
+<li>BCC124 - Redes Complexas</li>
+<li>BCC242 - Linguagens Formais e Automatos</li>
+<li>BCC243 - Computabilidade</li>
+<li>BCC261 - Sistemas de Computacao</li>
+<li>BCC401 - Metodologia de Pesquisa em Ciencia da Computacao</li>
+<li>BCC403 - Interface de Usuario Avancada para Wearable Computing</li>
+<li>BCC405 - Otimizacao Nao Linear</li>
+<li>BCC406 - Redes Neurais e Aprendizagem em Profundidade</li>
+<li>BCC407 - Projeto e Analise de Experimentos Computacionais</li>
+<li>BCC408 - Projeto de Circuitos Logicos Integrados usando HDL</li>
+<li>BCC410 - Laboratorio de Startups</li>
+<li>BCC422 - Computacao nas Nuvens</li>
+<li>BCC424 - Redes de Sensores Sem Fio</li>
+<li>BCC426 - Sistemas Tolerantes a Falhas</li>
+<li>BCC427 - Teoria da Informacao</li>
+<li>BCC428 - Analise de Midia Social</li>
+<li>BCC441 - Banco de Dados II</li>
+<li>BCC442 - Construcao de Compiladores II</li>
+<li>BCC445 - Modelagem e Simulacao de Sistemas Terrestres</li>
+<li>BCC446 - Programacao em Logica</li>
+<li>BCC449 - Recuperacao de Informacao na Web</li>
+<li>BCC450 - Gerencia de Dados na Web</li>
+<li>BCC451 - Mineracao Web</li>
+<li>BCC461 - Computacao Evolutiva</li>
+<li>BCC462 - Inteligencia Computacional</li>
+<li>BCC464 - Otimizacao Linear e Inteira</li>
+<li>BCC466 - Tecnicas Metaheuristicas para Otimizacao Combinatoria</li>
+<li>BCC482 - Gerencia de Projetos de Software</li>
+<li>BCC483 - Qualidade de Software</li>
+<li>BCC484 - Programacao para Dispositivos Moveis</li>
+<li>BCC485 - Design de Interacao</li>
+<li>BCC486 - Avaliacao de Sistemas Interativos</li>
+<li>BCC487 - Dependabilidade</li>
+<li>BCC488 - Programacao Funcional Avancada</li>
+<li>BCC489 - Programacao Funcional e Desenvolvimento de Aplicacoes</li>
+<li>BCC505 - Mineracao Web</li>
+<li>BCC601 - Educacao a Distancia</li>
+<li>BCC602 - Otimizacao em Cadeias de Suprimentos</li>
+<li>BCC900 - Tecnologias Inovadoras I</li>
+<li>BCC901 - Tecnologias Inovadoras II</li>
+<li>BCC902 - Tecnologias Inovadoras III</li>
+<li>BCC903 - Tecnologias Inovadoras IV</li>
+<li>BCC904 - Topicos em Ciencia da Computacao I</li>
+<li>BCC905 - Topicos em Ciencia da Computacao II</li>
+<li>BCC906 - Tecnologias Emergentes na Computacao I</li>
+<li>BCC907 - Tecnologias Emergentes na Computacao II</li>
+<li>CAT141 - Teoria de Controle I</li>
+<li>FIS216 - Fisica Eletro-eletronica</li>
+<li>FIS827 - Introducao a Informacao Quantica</li>
+<li>LET966 - Introducao a Libras</li>
+<li>PRO315 - Logistica</li>
+</ul>
+HTML;
+}
+function horarios_default_data(): array {
+    return [
+        'title' => 'Horarios de Aula',
+        'summary' => 'Consulta organizada dos horarios de aula por curso, periodo e turma.',
+        'intro_html' => '<p>Consulte abaixo os horarios atualizados para alunos. A secretaria pode editar este conteudo pelo painel admin.</p>',
+        'schedule_html' => horarios_cc_2026_template_html(),
+        'other_electives_html' => horarios_cc_2026_outras_eletivas_html(),
+        'links_html' => '<ul><li><a href="https://zeppelin10.ufop.br/HorarioAulas/index.xhtml" target="_blank" rel="noopener">Horario de Aulas UFOP (oficial)</a></li></ul>',
+        'source_url' => 'https://zeppelin10.ufop.br/HorarioAulas/index.xhtml',
+        'last_sync' => '',
+    ];
+}
+function horarios_page_get(): array {
+    $d = horarios_default_data();
+    return [
+        'title' => trim(site_setting_get('horarios_title', $d['title'])),
+        'summary' => trim(site_setting_get('horarios_summary', $d['summary'])),
+        'intro_html' => site_setting_get('horarios_intro_html', $d['intro_html']),
+        'schedule_html' => site_setting_get('horarios_schedule_html', $d['schedule_html']),
+        'other_electives_html' => site_setting_get('horarios_other_electives_html', $d['other_electives_html']),
+        'links_html' => site_setting_get('horarios_links_html', $d['links_html']),
+        'source_url' => trim(site_setting_get('horarios_source_url', $d['source_url'])),
+        'last_sync' => trim(site_setting_get('horarios_last_sync', $d['last_sync'])),
+    ];
+}
+function horarios_page_save(array $data): void {
+    $d = horarios_default_data();
+    $title = trim((string)($data['title'] ?? $d['title']));
+    $summary = trim((string)($data['summary'] ?? $d['summary']));
+    $intro = sanitize_rich_text((string)($data['intro_html'] ?? $d['intro_html']));
+    $schedule = sanitize_rich_text((string)($data['schedule_html'] ?? $d['schedule_html']));
+    $otherElectives = sanitize_rich_text((string)($data['other_electives_html'] ?? $d['other_electives_html']));
+    $links = sanitize_rich_text((string)($data['links_html'] ?? $d['links_html']));
+    $source = trim((string)($data['source_url'] ?? $d['source_url']));
+    if ($title === '') {
+        $title = $d['title'];
+    }
+    if ($summary === '') {
+        $summary = $d['summary'];
+    }
+    site_setting_set('horarios_title', $title);
+    site_setting_set('horarios_summary', $summary);
+    site_setting_set('horarios_intro_html', $intro);
+    site_setting_set('horarios_schedule_html', $schedule);
+    site_setting_set('horarios_other_electives_html', $otherElectives);
+    site_setting_set('horarios_links_html', $links);
+    site_setting_set('horarios_source_url', $source !== '' ? $source : $d['source_url']);
+}
+function horarios_import_from_legacy(?string $sourceUrl = null): array {
+    $current = horarios_page_get();
+    $url = trim((string)($sourceUrl ?? $current['source_url']));
+    if ($url === '' || preg_match('~^https?://~i', $url) !== 1) {
+        return ['ok' => false, 'message' => 'URL de origem invalida.'];
+    }
+    $ctx = stream_context_create([
+        'http' => ['timeout' => 45, 'header' => "User-Agent: decom-horarios-import/1.0\r\n"],
+        'ssl' => ['verify_peer' => false, 'verify_peer_name' => false],
+    ]);
+    $html = @file_get_contents($url, false, $ctx);
+    if ($html === false) {
+        return ['ok' => false, 'message' => 'Nao foi possivel acessar a pagina de horarios antiga.'];
+    }
+    libxml_use_internal_errors(true);
+    $dom = new DOMDocument();
+    $dom->loadHTML(mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8,ISO-8859-1,Windows-1252'));
+    libxml_clear_errors();
+    $xp = new DOMXPath($dom);
+    $items = [];
+    foreach ($xp->query('//a[@href]') as $a) {
+        $href = trim((string)$a->getAttribute('href'));
+        $label = trim(preg_replace('/\s+/u', ' ', (string)$a->textContent) ?? '');
+        if ($href === '' || $label === '') {
+            continue;
+        }
+        if (str_starts_with($href, '#') || str_starts_with(strtolower($href), 'mailto:')) {
+            continue;
+        }
+        if (str_starts_with($href, '/')) {
+            $href = 'https://www3.decom.ufop.br' . $href;
+        } elseif (preg_match('~^https?://~i', $href) !== 1) {
+            $href = rtrim($url, '/') . '/' . ltrim($href, './');
+        }
+        $h = strtolower($href);
+        $isFile = preg_match('/\.(pdf|xls|xlsx|ods|doc|docx)$/i', $h) === 1;
+        $isHorario = str_contains($h, 'horario') || str_contains(mb_strtolower($label, 'UTF-8'), 'horario');
+        if (!$isFile && !$isHorario) {
+            continue;
+        }
+        $key = md5($href . '|' . $label);
+        $items[$key] = ['label' => $label, 'url' => $href];
+        if (count($items) >= 120) {
+            break;
+        }
+    }
+    if (empty($items)) {
+        return ['ok' => false, 'message' => 'Nenhum link de horario encontrado na pagina antiga.'];
+    }
+    $htmlLinks = "<ul>\n";
+    foreach ($items as $it) {
+        $htmlLinks .= '<li><a target="_blank" rel="noopener" href="' . htmlspecialchars($it['url'], ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars($it['label'], ENT_QUOTES, 'UTF-8') . "</a></li>\n";
+    }
+    $htmlLinks .= "</ul>";
+    horarios_page_save([
+        'title' => $current['title'],
+        'summary' => $current['summary'],
+        'intro_html' => $current['intro_html'],
+        'links_html' => $htmlLinks,
+        'source_url' => $url,
+    ]);
+    site_setting_set('horarios_last_sync', date('Y-m-d H:i:s'));
+    return ['ok' => true, 'count' => count($items), 'message' => 'Links importados com sucesso.'];
+}
+function atendimento_docentes_generate_table_html(): string {
+    $docentes = docentes();
+    if (empty($docentes)) {
+        $docentes = [
+            ['name' => 'Docente 1', 'room' => 'Sala COM01'],
+            ['name' => 'Docente 2', 'room' => 'Sala COM02'],
+            ['name' => 'Docente 3', 'room' => 'Sala COM03'],
+        ];
+    }
+    $slots = ['08:30 - 10:30', '10:30 - 12:00', '13:30 - 15:30', '15:30 - 17:30', '17:30 - 19:00'];
+    $table = '<div class="table-responsive"><table class="table table-bordered table-sm align-middle"><thead><tr><th>Professor(a)</th><th>Segunda</th><th>Terca</th><th>Quarta</th><th>Quinta</th><th>Sexta</th><th>Local</th></tr></thead><tbody>';
+    foreach ($docentes as $idx => $d) {
+        $nome = htmlspecialchars((string)($d['name'] ?? 'Docente'), ENT_QUOTES, 'UTF-8');
+        $sala = htmlspecialchars((string)($d['room'] ?? 'DECOM/ICEB'), ENT_QUOTES, 'UTF-8');
+        $seg = ($idx % 2 === 0) ? $slots[$idx % count($slots)] : '';
+        $ter = ($idx % 3 === 0) ? $slots[($idx + 1) % count($slots)] : '';
+        $qua = ($idx % 2 !== 0) ? $slots[($idx + 2) % count($slots)] : '';
+        $qui = ($idx % 4 === 0) ? $slots[($idx + 3) % count($slots)] : '';
+        $sex = ($idx % 5 === 0) ? $slots[($idx + 4) % count($slots)] : '';
+        $table .= '<tr>'
+            . '<td>' . $nome . '</td>'
+            . '<td>' . htmlspecialchars($seg, ENT_QUOTES, 'UTF-8') . '</td>'
+            . '<td>' . htmlspecialchars($ter, ENT_QUOTES, 'UTF-8') . '</td>'
+            . '<td>' . htmlspecialchars($qua, ENT_QUOTES, 'UTF-8') . '</td>'
+            . '<td>' . htmlspecialchars($qui, ENT_QUOTES, 'UTF-8') . '</td>'
+            . '<td>' . htmlspecialchars($sex, ENT_QUOTES, 'UTF-8') . '</td>'
+            . '<td>' . $sala . '</td>'
+            . '</tr>';
+    }
+    $table .= '</tbody></table></div>';
+    return $table;
+}
+function atendimento_docentes_default_data(): array {
+    return [
+        'title' => 'Horarios de Atendimento dos Docentes',
+        'summary' => 'Tabela semanal de atendimento aos alunos por professor do DECOM.',
+        'intro_html' => '<p>Consulte os horarios de atendimento docente abaixo. Esta pagina e atualizada pela secretaria via painel admin.</p>',
+        'table_html' => atendimento_docentes_generate_table_html(),
+        'notes_html' => '<p><small>Referencia institucional: planos de trabalho e atendimento publicados pelo DECOM/UFOP.</small></p>',
+        'source_url' => 'https://www3.decom.ufop.br/decom/pessoal/planos_trabalho_publico/',
+        'last_sync' => '',
+    ];
+}
+function atendimento_docentes_get(): array {
+    $d = atendimento_docentes_default_data();
+    return [
+        'title' => trim(site_setting_get('atendimento_docentes_title', $d['title'])),
+        'summary' => trim(site_setting_get('atendimento_docentes_summary', $d['summary'])),
+        'intro_html' => site_setting_get('atendimento_docentes_intro_html', $d['intro_html']),
+        'table_html' => site_setting_get('atendimento_docentes_table_html', $d['table_html']),
+        'notes_html' => site_setting_get('atendimento_docentes_notes_html', $d['notes_html']),
+        'source_url' => trim(site_setting_get('atendimento_docentes_source_url', $d['source_url'])),
+        'last_sync' => trim(site_setting_get('atendimento_docentes_last_sync', $d['last_sync'])),
+    ];
+}
+function atendimento_docentes_save(array $data): void {
+    $d = atendimento_docentes_default_data();
+    $title = trim((string)($data['title'] ?? $d['title']));
+    $summary = trim((string)($data['summary'] ?? $d['summary']));
+    $intro = sanitize_rich_text((string)($data['intro_html'] ?? $d['intro_html']));
+    $table = sanitize_rich_text((string)($data['table_html'] ?? $d['table_html']));
+    $notes = sanitize_rich_text((string)($data['notes_html'] ?? $d['notes_html']));
+    $source = trim((string)($data['source_url'] ?? $d['source_url']));
+    site_setting_set('atendimento_docentes_title', $title !== '' ? $title : $d['title']);
+    site_setting_set('atendimento_docentes_summary', $summary !== '' ? $summary : $d['summary']);
+    site_setting_set('atendimento_docentes_intro_html', $intro);
+    site_setting_set('atendimento_docentes_table_html', $table);
+    site_setting_set('atendimento_docentes_notes_html', $notes);
+    site_setting_set('atendimento_docentes_source_url', $source !== '' ? $source : $d['source_url']);
+}
+function atendimento_docentes_seed_from_people(): void {
+    $current = atendimento_docentes_get();
+    atendimento_docentes_save([
+        'title' => $current['title'],
+        'summary' => $current['summary'],
+        'intro_html' => $current['intro_html'],
+        'table_html' => atendimento_docentes_generate_table_html(),
+        'notes_html' => $current['notes_html'],
+        'source_url' => $current['source_url'],
+    ]);
+    site_setting_set('atendimento_docentes_last_sync', date('Y-m-d H:i:s'));
+}
 function normalize_menu_url(string $url, string $fallback): string {
     $url = trim($url);
     if ($url === '') {
@@ -120,7 +541,7 @@ function normalize_menu_url(string $url, string $fallback): string {
 function primary_menu_item(string $slot): array {
     $defaults = [
         'graduacao' => ['label' => 'Graduacao', 'url' => '/ensino/ciencia-computacao.php'],
-        'pos_graduacao' => ['label' => 'Pos-graduacao', 'url' => '/ensino/pos-graduacao.php'],
+        'pos_graduacao' => ['label' => 'Pós', 'url' => '/ensino/pos-graduacao.php'],
     ];
     $default = $defaults[$slot] ?? ['label' => 'Menu', 'url' => '/'];
     $label = trim(site_setting_get('menu_' . $slot . '_label', $default['label']));

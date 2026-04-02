@@ -60,7 +60,9 @@ $peopleCount = admin_count_table('people_items');
                     <li class="nav-item"><a href="/admin/content.php?type=defesas" class="nav-link"><p>Defesas</p></a></li>
                     <li class="nav-item"><a href="/admin/content.php?type=estagios" class="nav-link"><p>Estagios e Empregos</p></a></li>
                     <li class="nav-item"><a href="/admin/pessoal.php" class="nav-link"><p>Pessoal</p></a></li>
+                    <li class="nav-item"><a href="/admin/atendimento-docentes.php" class="nav-link"><p>Atendimento Docentes</p></a></li>
                     <li class="nav-item"><a href="/admin/menu.php" class="nav-link"><p>Menu Principal</p></a></li>
+                    <li class="nav-item"><a href="/admin/horarios.php" class="nav-link"><p>Horarios de Aula</p></a></li>
                     <li class="nav-item"><a href="/admin/pos-graduacao.php" class="nav-link"><p>Pos-graduacao</p></a></li>
                     <li class="nav-item"><a href="/admin/pos-publicacoes.php?tipo=noticias" class="nav-link"><p>Noticias/Editais Pos</p></a></li>
                     <li class="nav-item"><a href="/admin/pos-subsite.php" class="nav-link"><p>Subsite Pos</p></a></li>
@@ -101,6 +103,15 @@ $peopleCount = admin_count_table('people_items');
                                 <p class="display-6 mb-2"><?= e((string)$editaisCount) ?></p>
                                 <p class="text-secondary">Registros cadastrados.</p>
                                 <a class="btn btn-secondary" href="/admin/content.php?type=editais">Gerenciar Editais</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card card-primary card-outline">
+                            <div class="card-header"><h3 class="card-title">Horarios de Aula</h3></div>
+                            <div class="card-body">
+                                <p class="mb-2">Edite e importe os horarios de alunos pela pagina oficial antiga.</p>
+                                <a class="btn btn-primary" href="/admin/horarios.php">Gerenciar Horarios</a>
                             </div>
                         </div>
                     </div>

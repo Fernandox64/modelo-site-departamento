@@ -63,13 +63,13 @@ page_header('Inicio');
 
         <div class="col-lg-4">
             <?php foreach (['Editais' => $editais, 'Defesas' => $defesas, 'Estagios e Empregos' => $jobs] as $title => $items): ?>
-                <div class="card shadow-sm mb-4">
+                <div class="card shadow-sm mb-4 side-widget">
                     <div class="card-body">
                         <h2 class="h5"><?= e($title) ?></h2>
                         <ul class="list-group list-group-flush">
                             <?php foreach ($items as $item): ?>
                                 <li class="list-group-item px-0">
-                                    <a href="/noticias/ver.php?slug=<?= urlencode($item['slug']) ?>"><?= e($item['title']) ?></a>
+                                    <a class="side-widget-link" href="/noticias/ver.php?slug=<?= urlencode($item['slug']) ?>"><?= e($item['title']) ?></a>
                                 </li>
                             <?php endforeach; ?>
                         </ul>
