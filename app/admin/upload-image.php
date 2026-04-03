@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../includes/config.php';
 
-require_admin();
+require_admin_permission('manage_content');
 
 header('Content-Type: application/json; charset=UTF-8');
 

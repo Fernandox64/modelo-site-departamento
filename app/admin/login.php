@@ -17,8 +17,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $email = trim((string)($_POST['email'] ?? ''));
         $password = (string)($_POST['password'] ?? '');
+        $remember = isset($_POST['remember_me']);
 
         if (admin_login($email, $password)) {
+            if ($remember) {
+                admin_enable_remember_me();
+            }
             redirect('/admin/dashboard.php');
         }
 
@@ -68,6 +72,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <div class="input-group mb-3">
                     <input type="password" class="form-control" name="password" placeholder="Senha">
+                </div>
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" value="1" id="remember_me" name="remember_me">
+                    <label class="form-check-label" for="remember_me">Lembrar senha por 30 dias</label>
                 </div>
                 <div class="row">
                     <div class="col-12">

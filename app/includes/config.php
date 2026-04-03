@@ -4,6 +4,8 @@ declare(strict_types=1);
 if (session_status() !== PHP_SESSION_ACTIVE) {
     $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
         || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https');
+    $rememberSeconds = 60 * 60 * 24 * 30;
+    @ini_set('session.gc_maxlifetime', (string)$rememberSeconds);
     session_set_cookie_params([
         'lifetime' => 0,
         'path' => '/',
@@ -1203,6 +1205,126 @@ function admin_email_config(): string {
 function admin_password_hash_config(): string {
     return trim((string)(getenv('ADMIN_PASSWORD_HASH') ?: ''));
 }
+function admin_roles(): array {
+    return ['superadmin', 'editor', 'secretaria'];
+}
+function admin_normalize_role(string $role): string {
+    $role = trim(mb_strtolower($role, 'UTF-8'));
+    return in_array($role, admin_roles(), true) ? $role : 'editor';
+}
+function admin_role_permissions_map(): array {
+    return [
+        'superadmin' => [
+            'view_dashboard',
+            'manage_content',
+            'manage_people',
+            'manage_atendimento',
+            'manage_menu',
+            'manage_carousel',
+            'manage_schedule',
+            'manage_pos',
+            'manage_users',
+        ],
+        'editor' => [
+            'view_dashboard',
+            'manage_content',
+            'manage_carousel',
+        ],
+        'secretaria' => [
+            'view_dashboard',
+            'manage_content',
+            'manage_people',
+            'manage_atendimento',
+            'manage_menu',
+            'manage_carousel',
+            'manage_schedule',
+            'manage_pos',
+        ],
+    ];
+}
+function admin_permissions_for_role(string $role): array {
+    $role = admin_normalize_role($role);
+    $map = admin_role_permissions_map();
+    return $map[$role] ?? [];
+}
+function ensure_admin_users_table(): void {
+    static $ready = false;
+    if ($ready) {
+        return;
+    }
+    $ready = true;
+    try {
+        db()->exec(
+            "CREATE TABLE IF NOT EXISTS admin_users (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                name VARCHAR(120) NOT NULL,
+                email VARCHAR(190) NOT NULL UNIQUE,
+                password_hash VARCHAR(255) NOT NULL,
+                role VARCHAR(30) NOT NULL DEFAULT 'editor',
+                is_active TINYINT(1) NOT NULL DEFAULT 1,
+                last_login_at DATETIME NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
+        );
+    } catch (Throwable $e) {
+        error_log('Failed ensuring admin_users table: ' . $e->getMessage());
+    }
+}
+function ensure_default_admin_user(): void {
+    ensure_admin_users_table();
+    $email = admin_email_config();
+    $hash = admin_password_hash_config();
+    if ($email === '' || $hash === '') {
+        return;
+    }
+    try {
+        $stmt = db()->prepare('SELECT id FROM admin_users WHERE email = :email LIMIT 1');
+        $stmt->execute([':email' => $email]);
+        if ($stmt->fetch()) {
+            return;
+        }
+        $insert = db()->prepare(
+            'INSERT INTO admin_users (name, email, password_hash, role, is_active)
+             VALUES (:name, :email, :password_hash, :role, 1)'
+        );
+        $insert->execute([
+            ':name' => 'Administrador',
+            ':email' => $email,
+            ':password_hash' => $hash,
+            ':role' => 'superadmin',
+        ]);
+    } catch (Throwable $e) {
+        error_log('Failed ensuring default admin user: ' . $e->getMessage());
+    }
+}
+function admin_current_user(): array {
+    return [
+        'id' => (int)($_SESSION['admin_user_id'] ?? 0),
+        'name' => (string)($_SESSION['admin_user_name'] ?? 'Admin'),
+        'email' => (string)($_SESSION['admin_user_email'] ?? ''),
+        'role' => admin_normalize_role((string)($_SESSION['admin_role'] ?? 'superadmin')),
+    ];
+}
+function admin_can(string $permission): bool {
+    if (!is_admin_logged_in()) {
+        return false;
+    }
+    $role = admin_current_user()['role'];
+    if ($role === 'superadmin') {
+        return true;
+    }
+    return in_array($permission, admin_permissions_for_role($role), true);
+}
+function require_admin_permission(string $permission): void {
+    require_admin();
+    if (admin_can($permission)) {
+        return;
+    }
+    http_response_code(403);
+    echo '<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Acesso negado</title><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"></head><body class="bg-light"><main class="container py-5"><div class="alert alert-danger"><h1 class="h4 mb-2">Acesso negado</h1><p class="mb-0">Sua conta nao possui permissao para acessar este modulo.</p></div><a class="btn btn-primary" href="/admin/dashboard.php">Voltar ao painel</a></main></body></html>';
+    exit;
+}
 function csrf_token(): string {
     if (empty($_SESSION['csrf_token'])) {
         $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
@@ -1230,24 +1352,70 @@ function admin_clear_login_failures(): void {
     unset($_SESSION['admin_login_attempts'], $_SESSION['admin_lock_until']);
 }
 function admin_login(string $email, string $password): bool {
-    $adminEmail = admin_email_config();
-    $adminPasswordHash = admin_password_hash_config();
-    if ($adminEmail === '' || $adminPasswordHash === '') {
+    ensure_default_admin_user();
+    if (admin_is_login_locked()) {
         return false;
     }
-    $isValidEmail = hash_equals($adminEmail, $email);
-    $isValidPassword = password_verify($password, $adminPasswordHash);
-    if (!$isValidEmail || !$isValidPassword || admin_is_login_locked()) {
+    try {
+        $stmt = db()->prepare(
+            'SELECT id, name, email, password_hash, role, is_active
+             FROM admin_users
+             WHERE email = :email
+             LIMIT 1'
+        );
+        $stmt->execute([':email' => trim($email)]);
+        $user = $stmt->fetch();
+    } catch (Throwable $e) {
+        error_log('Admin login query failed: ' . $e->getMessage());
+        $user = false;
+    }
+    if (!$user || (int)($user['is_active'] ?? 0) !== 1) {
+        return false;
+    }
+    if (!password_verify($password, (string)$user['password_hash'])) {
         return false;
     }
     session_regenerate_id(true);
     $_SESSION['admin_ok'] = true;
+    $_SESSION['admin_user_id'] = (int)$user['id'];
+    $_SESSION['admin_user_name'] = (string)$user['name'];
+    $_SESSION['admin_user_email'] = (string)$user['email'];
+    $_SESSION['admin_role'] = admin_normalize_role((string)$user['role']);
+    try {
+        $upd = db()->prepare('UPDATE admin_users SET last_login_at = NOW() WHERE id = :id');
+        $upd->execute([':id' => (int)$user['id']]);
+    } catch (Throwable $e) {
+        error_log('Failed updating admin last_login_at: ' . $e->getMessage());
+    }
     admin_clear_login_failures();
     return true;
 }
 function admin_logout(): void {
+    $params = session_get_cookie_params();
+    setcookie(session_name(), '', [
+        'expires' => time() - 3600,
+        'path' => $params['path'] ?? '/',
+        'domain' => $params['domain'] ?? '',
+        'secure' => (bool)($params['secure'] ?? false),
+        'httponly' => (bool)($params['httponly'] ?? true),
+        'samesite' => $params['samesite'] ?? 'Lax',
+    ]);
     $_SESSION = [];
     session_destroy();
+}
+function admin_enable_remember_me(): void {
+    $days = 30;
+    $ttl = 60 * 60 * 24 * $days;
+    $params = session_get_cookie_params();
+    setcookie(session_name(), session_id(), [
+        'expires' => time() + $ttl,
+        'path' => $params['path'] ?? '/',
+        'domain' => $params['domain'] ?? '',
+        'secure' => (bool)($params['secure'] ?? false),
+        'httponly' => (bool)($params['httponly'] ?? true),
+        'samesite' => $params['samesite'] ?? 'Lax',
+    ]);
+    $_SESSION['admin_remember'] = true;
 }
 
 function fetch_content_items(string $table): array {
