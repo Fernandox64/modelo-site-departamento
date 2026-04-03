@@ -35,6 +35,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Admin Login</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-rc3/dist/css/adminlte.min.css">
+    <style>
+        body.login-page {
+            background-image:
+                linear-gradient(rgba(17, 31, 162, 0.62), rgba(17, 31, 162, 0.62)),
+                url('/assets/images/login-bg-tech.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+        .login-box .card {
+            box-shadow: 0 18px 42px rgba(0, 0, 0, 0.28);
+            border-radius: 14px;
+            overflow: hidden;
+        }
+    </style>
 </head>
 <body class="login-page bg-body-secondary">
 <div class="login-box">

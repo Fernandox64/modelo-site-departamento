@@ -10,6 +10,7 @@ $menuPosGraduacao = primary_menu_item('pos_graduacao');
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title><?= e($pageTitle ?? SITE_NAME) ?></title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 <link href="/assets/css/theme.css" rel="stylesheet">
 </head>
 <body>
@@ -114,8 +115,9 @@ $menuPosGraduacao = primary_menu_item('pos_graduacao');
             </ul>
 
             <div class="d-flex gap-2">
-                <a class="btn btn-outline-secondary btn-sm" href="/health.php">Health</a>
-                <a class="btn btn-primary btn-sm" href="/admin/login.php">Admin</a>
+                <a class="btn btn-primary btn-sm" href="/admin/login.php" aria-label="Area administrativa" title="Area administrativa">
+                    <i class="bi bi-person-workspace"></i>
+                </a>
             </div>
         </div>
     </div>

@@ -62,6 +62,15 @@ page_header('Inicio');
         </div>
 
         <div class="col-lg-4">
+            <div class="card shadow-sm mb-4 side-widget">
+                <div class="card-body">
+                    <h2 class="h5">Acesso do Aluno</h2>
+                    <div class="d-grid gap-2">
+                        <a class="btn btn-primary btn-sm" href="/pessoal/atendimento-docentes.php">Atendimento Docentes</a>
+                        <a class="btn btn-outline-secondary btn-sm" href="/ensino/horarios-de-aula.php">Horarios de Aula</a>
+                    </div>
+                </div>
+            </div>
             <?php foreach (['Editais' => $editais, 'Defesas' => $defesas, 'Estagios e Empregos' => $jobs] as $title => $items): ?>
                 <div class="card shadow-sm mb-4 side-widget">
                     <div class="card-body">

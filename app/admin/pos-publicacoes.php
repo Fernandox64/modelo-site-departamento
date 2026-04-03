@@ -141,6 +141,7 @@ $items = $stmt->fetchAll() ?: [];
                     <li class="nav-item"><a href="/admin/pos-publicacoes.php?tipo=noticias" class="nav-link<?= $type === 'informacao' ? ' active' : '' ?>"><p>Noticias Pos</p></a></li>
                     <li class="nav-item"><a href="/admin/pos-publicacoes.php?tipo=editais" class="nav-link<?= $type === 'edital' ? ' active' : '' ?>"><p>Editais Pos</p></a></li>
                     <li class="nav-item"><a href="/admin/pos-subsite.php" class="nav-link"><p>Subsite Pos</p></a></li>
+                    <li class="nav-item"><a href="/health.php" class="nav-link" target="_blank" rel="noopener"><p>Health</p></a></li>
                 </ul>
             </nav>
         </div>
