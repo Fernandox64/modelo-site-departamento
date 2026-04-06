@@ -25,7 +25,7 @@ $menuPosGraduacao = primary_menu_item('pos_graduacao');
     <div class="container">
         <a class="navbar-brand d-flex align-items-center" href="/" title="DECOM UFOP" style="height:40px;padding-top:0;padding-bottom:0;overflow:visible;">
             <img
-                src="http://www.decom.ufop.br/decom/site_media/img/decom_logo.png"
+                src="https://www.decom.ufop.br/decom/site_media/img/decom_logo.png"
                 alt="Logo DECOM UFOP"
                 style="height:48px;width:auto;display:block"
             >
