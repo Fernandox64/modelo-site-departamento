@@ -9,7 +9,7 @@ function apply_security_headers(): void {
     header('X-Content-Type-Options: nosniff');
     header('Referrer-Policy: strict-origin-when-cross-origin');
     header('Permissions-Policy: geolocation=(), microphone=(), camera=()');
-    header("Content-Security-Policy: default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'; style-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' https://cdn.jsdelivr.net data:; connect-src 'self'; frame-ancestors 'self'; base-uri 'self'; form-action 'self'");
+    header("Content-Security-Policy: default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'; style-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'; img-src 'self' data: https: http:; font-src 'self' https://cdn.jsdelivr.net data:; connect-src 'self'; frame-ancestors 'self'; base-uri 'self'; form-action 'self'");
     $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
         || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https');
     if ($isHttps) {
@@ -127,6 +127,403 @@ function site_setting_set(string $key, string $value): void {
     );
     $stmt->execute([':k' => $key, ':v' => $value]);
 }
+
+function decom_chefia_defaults(): array {
+    return [
+        'department_title' => 'DECOM',
+        'department_intro' => 'O Departamento de Computacao (DECOM) da UFOP vem a cada ano aprimorando suas atividades de ensino e pesquisa em Computacao, desde a sua criacao em 1995. Esta base de informacoes apresenta diversos dados sobre nosso departamento, tais como o seu quadro de professores e tecnicos, relacao de alunos, cursos oferecidos, infra-estrutura disponivel, projetos de pesquisa, consultorias e projetos de extensao.',
+        'positions' => [
+            [
+                'role' => 'Chefia do Departamento',
+                'name' => 'Profa. Dra. Valeria de Carvalho Santos',
+                'email' => 'chefia.decom@ufop.edu.br',
+                'mandate' => 'ate 02 de Janeiro de 2028',
+                'secretary_name' => 'Viviane Michelline Veloso Danese',
+                'secretary_email' => 'decom@ufop.edu.br',
+                'secretary_phone' => '+55 (31) 3559-1692',
+            ],
+            [
+                'role' => 'Vice Chefia',
+                'name' => 'Prof. Dr. Puca Huachi Vaz Penna',
+                'email' => 'vicechefia.decom@ufop.edu.br',
+                'mandate' => 'ate 02 de Janeiro de 2028',
+                'secretary_name' => '',
+                'secretary_email' => '',
+                'secretary_phone' => '',
+            ],
+            [
+                'role' => 'Coordenacao de Graduacao',
+                'name' => 'Profa. Dra. Andrea Gomes Campos',
+                'email' => 'rodrigo.silva@ufop.edu.br',
+                'mandate' => 'ate 16 de Agosto de 2025',
+                'secretary_name' => 'Fernando Jose Teixeira de Freitas',
+                'secretary_email' => 'cocic@ufop.edu.br',
+                'secretary_phone' => '+55 (31) 3559-1312',
+            ],
+            [
+                'role' => 'Coordenacao de Pos-graduacao',
+                'name' => 'Prof. Dr. Marco Antonio Moreira de Carvalho',
+                'email' => 'coordenacao.ppgcc@ufop.edu.br',
+                'mandate' => 'ate 29 de maio de 2027',
+                'secretary_name' => 'Mariana Ferreira Lanna',
+                'secretary_email' => 'secretaria.ppgcc@ufop.edu.br',
+                'secretary_phone' => '+55 (31) 3559-1641',
+            ],
+            ['role' => 'Cargo opcional 1', 'name' => '', 'email' => '', 'mandate' => '', 'secretary_name' => '', 'secretary_email' => '', 'secretary_phone' => ''],
+            ['role' => 'Cargo opcional 2', 'name' => '', 'email' => '', 'mandate' => '', 'secretary_name' => '', 'secretary_email' => '', 'secretary_phone' => ''],
+            ['role' => 'Cargo opcional 3', 'name' => '', 'email' => '', 'mandate' => '', 'secretary_name' => '', 'secretary_email' => '', 'secretary_phone' => ''],
+            ['role' => 'Cargo opcional 4', 'name' => '', 'email' => '', 'mandate' => '', 'secretary_name' => '', 'secretary_email' => '', 'secretary_phone' => ''],
+            ['role' => 'Cargo opcional 5', 'name' => '', 'email' => '', 'mandate' => '', 'secretary_name' => '', 'secretary_email' => '', 'secretary_phone' => ''],
+            ['role' => 'Cargo opcional 6', 'name' => '', 'email' => '', 'mandate' => '', 'secretary_name' => '', 'secretary_email' => '', 'secretary_phone' => ''],
+        ],
+        'address_block' => "Departamento de Computacao (DECOM)\nInstituto de Ciencias Exatas e Biologicas\nUniversidade Federal de Ouro Preto\nCampus Universitario Morro do Cruzeiro\n35400-000 Ouro Preto, MG, Brasil",
+        'phone' => '+55 (31) 3559-1692',
+        'email' => 'decom@ufop.edu.br',
+    ];
+}
+
+function decom_chefia_get(): array {
+    $defaults = decom_chefia_defaults();
+    $raw = trim(site_setting_get('decom_chefia_json', ''));
+    if ($raw === '') {
+        return $defaults;
+    }
+    try {
+        $decoded = json_decode($raw, true, 512, JSON_THROW_ON_ERROR);
+        if (!is_array($decoded)) {
+            return $defaults;
+        }
+        $positions = [];
+        for ($i = 0; $i < 10; $i++) {
+            $base = $defaults['positions'][$i] ?? ['role' => '', 'name' => '', 'email' => '', 'mandate' => '', 'secretary_name' => '', 'secretary_email' => '', 'secretary_phone' => ''];
+            $row = $decoded['positions'][$i] ?? [];
+            $positions[] = [
+                'role' => trim((string)($row['role'] ?? $base['role'])),
+                'name' => trim((string)($row['name'] ?? $base['name'])),
+                'email' => trim((string)($row['email'] ?? $base['email'])),
+                'mandate' => trim((string)($row['mandate'] ?? $base['mandate'])),
+                'secretary_name' => trim((string)($row['secretary_name'] ?? $base['secretary_name'])),
+                'secretary_email' => trim((string)($row['secretary_email'] ?? $base['secretary_email'])),
+                'secretary_phone' => trim((string)($row['secretary_phone'] ?? $base['secretary_phone'])),
+            ];
+        }
+        return [
+            'department_title' => trim((string)($decoded['department_title'] ?? $defaults['department_title'])),
+            'department_intro' => trim((string)($decoded['department_intro'] ?? $defaults['department_intro'])),
+            'positions' => $positions,
+            'address_block' => trim((string)($decoded['address_block'] ?? $defaults['address_block'])),
+            'phone' => trim((string)($decoded['phone'] ?? $defaults['phone'])),
+            'email' => trim((string)($decoded['email'] ?? $defaults['email'])),
+        ];
+    } catch (Throwable $e) {
+        error_log('Failed decoding decom_chefia_json: ' . $e->getMessage());
+        return $defaults;
+    }
+}
+
+function decom_chefia_save(array $input): void {
+    $defaults = decom_chefia_defaults();
+    $positions = [];
+    for ($i = 0; $i < 10; $i++) {
+        $base = $defaults['positions'][$i];
+        $positions[] = [
+            'role' => trim((string)($input['positions'][$i]['role'] ?? $base['role'])),
+            'name' => trim((string)($input['positions'][$i]['name'] ?? $base['name'])),
+            'email' => trim((string)($input['positions'][$i]['email'] ?? $base['email'])),
+            'mandate' => trim((string)($input['positions'][$i]['mandate'] ?? $base['mandate'])),
+            'secretary_name' => trim((string)($input['positions'][$i]['secretary_name'] ?? $base['secretary_name'])),
+            'secretary_email' => trim((string)($input['positions'][$i]['secretary_email'] ?? $base['secretary_email'])),
+            'secretary_phone' => trim((string)($input['positions'][$i]['secretary_phone'] ?? $base['secretary_phone'])),
+        ];
+    }
+    $payload = [
+        'department_title' => trim((string)($input['department_title'] ?? $defaults['department_title'])),
+        'department_intro' => trim((string)($input['department_intro'] ?? $defaults['department_intro'])),
+        'positions' => $positions,
+        'address_block' => trim((string)($input['address_block'] ?? $defaults['address_block'])),
+        'phone' => trim((string)($input['phone'] ?? $defaults['phone'])),
+        'email' => trim((string)($input['email'] ?? $defaults['email'])),
+    ];
+    $serialized = json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    site_setting_set('decom_chefia_json', is_string($serialized) ? $serialized : '{}');
+}
+
+function academic_calendar_month_map(): array {
+    return [
+        'JANEIRO' => 1,
+        'FEVEREIRO' => 2,
+        'MARCO' => 3,
+        'MARÇO' => 3,
+        'ABRIL' => 4,
+        'MAIO' => 5,
+        'JUNHO' => 6,
+        'JULHO' => 7,
+        'AGOSTO' => 8,
+        'SETEMBRO' => 9,
+        'OUTUBRO' => 10,
+        'NOVEMBRO' => 11,
+        'DEZEMBRO' => 12,
+    ];
+}
+
+function academic_calendar_is_holiday_title(string $title): bool {
+    $haystack = mb_strtolower($title, 'UTF-8');
+    foreach ([
+        'feriado',
+        'ponto facultativo',
+        'recesso',
+        'sexta-feira santa',
+        'sexta feira santa',
+        'corpus christi',
+        'tiradentes',
+        'carnaval',
+        'paixao de cristo',
+        'páscoa',
+        'pascoa',
+    ] as $needle) {
+        if (mb_stripos($haystack, $needle, 0, 'UTF-8') !== false) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function academic_calendar_extract_text_from_pdf(string $pdfUrl): string {
+    $pdfContent = @file_get_contents($pdfUrl);
+    if ($pdfContent === false || $pdfContent === '') {
+        return '';
+    }
+
+    $tmpPdf = tempnam(sys_get_temp_dir(), 'ufop_cal_');
+    if ($tmpPdf === false) {
+        return '';
+    }
+    $tmpTxt = $tmpPdf . '.txt';
+    file_put_contents($tmpPdf, $pdfContent);
+
+    $cmd = 'pdftotext -layout ' . escapeshellarg($tmpPdf) . ' ' . escapeshellarg($tmpTxt) . ' 2>&1';
+    @exec($cmd, $output, $exitCode);
+    $text = '';
+    if ($exitCode === 0 && is_file($tmpTxt)) {
+        $raw = @file_get_contents($tmpTxt);
+        if (is_string($raw)) {
+            $text = $raw;
+        }
+    }
+
+    @unlink($tmpPdf);
+    @unlink($tmpTxt);
+    return $text;
+}
+
+function academic_calendar_parse_events_from_pdf_text(string $text, int $year): array {
+    if ($text === '') {
+        return [];
+    }
+
+    $monthMap = academic_calendar_month_map();
+    $eventsByDate = [];
+    $activeMonth = null;
+    $activeYear = $year;
+    $lastTouched = [];
+
+    $lines = preg_split('/\R/u', $text) ?: [];
+    foreach ($lines as $line) {
+        $clean = trim(preg_replace('/\s+/u', ' ', (string)$line) ?? '');
+        if ($clean === '') {
+            continue;
+        }
+
+        if (preg_match('/^([A-ZÇÁÀÃÉÊÍÓÔÕÚÜ]+)\s*\/\s*(\d{4})$/u', $clean, $monthMatch)) {
+            $monthName = mb_strtoupper(trim((string)$monthMatch[1]), 'UTF-8');
+            $headerYear = (int)$monthMatch[2];
+            if (isset($monthMap[$monthName])) {
+                $activeMonth = (int)$monthMap[$monthName];
+                $activeYear = $headerYear;
+            }
+            continue;
+        }
+
+        if ($activeMonth === null) {
+            continue;
+        }
+
+        preg_match_all(
+            '/(\d{1,2})(?:\s*a\s*(\d{1,2}))?\s*-\s*(.+?)(?=(?:\d{1,2}(?:\s*a\s*\d{1,2})?\s*-\s*)|$)/u',
+            $clean,
+            $matches,
+            PREG_SET_ORDER
+        );
+        if ($matches === []) {
+            if (!empty($lastTouched) && preg_match('/^[A-Z0-9\s\.\-\/]+$/u', $clean) !== 1) {
+                foreach ($lastTouched as $date => $itemIndexes) {
+                    foreach ($itemIndexes as $idx) {
+                        if (isset($eventsByDate[$date][$idx]['title'])) {
+                            $eventsByDate[$date][$idx]['title'] .= ' ' . $clean;
+                            $eventsByDate[$date][$idx]['title'] = trim((string)preg_replace('/\s+/u', ' ', (string)$eventsByDate[$date][$idx]['title']));
+                        }
+                    }
+                }
+            }
+            continue;
+        }
+
+        $lastTouched = [];
+        foreach ($matches as $match) {
+            $startDay = (int)$match[1];
+            $endDay = isset($match[2]) && $match[2] !== '' ? (int)$match[2] : $startDay;
+            if ($startDay < 1 || $endDay < $startDay || $endDay > 31) {
+                continue;
+            }
+            $title = trim((string)$match[3]);
+            $title = trim(preg_replace('/\s+/u', ' ', $title) ?? $title);
+            if ($title === '') {
+                continue;
+            }
+            $type = academic_calendar_is_holiday_title($title) ? 'holiday' : 'event';
+
+            for ($day = $startDay; $day <= $endDay; $day++) {
+                $date = sprintf('%04d-%02d-%02d', $activeYear, $activeMonth, $day);
+                if (!checkdate($activeMonth, $day, $activeYear)) {
+                    continue;
+                }
+                if (!isset($eventsByDate[$date])) {
+                    $eventsByDate[$date] = [];
+                }
+                $eventsByDate[$date][] = ['title' => $title, 'type' => $type];
+                $lastIndex = count($eventsByDate[$date]) - 1;
+                if (!isset($lastTouched[$date])) {
+                    $lastTouched[$date] = [];
+                }
+                $lastTouched[$date][] = $lastIndex;
+            }
+        }
+    }
+
+    $normalized = [];
+    foreach ($eventsByDate as $date => $items) {
+        $isHoliday = false;
+        foreach ($items as $item) {
+            if (($item['type'] ?? '') === 'holiday') {
+                $isHoliday = true;
+                break;
+            }
+        }
+        $normalized[$date] = [
+            'holiday' => $isHoliday,
+            'items' => $items,
+        ];
+    }
+    ksort($normalized);
+    return $normalized;
+}
+
+function academic_calendar_fetch_ufop(): array {
+    $today = date('Y-m-d');
+    $currentYear = (int)date('Y');
+    $cacheKey = 'academic_calendar_ufop_' . $currentYear;
+    $cached = trim(site_setting_get($cacheKey, ''));
+    if ($cached !== '') {
+        $decoded = json_decode($cached, true);
+        if (is_array($decoded) && (($decoded['cached_until'] ?? '') >= $today)) {
+            return $decoded;
+        }
+    }
+
+    $sourcePage = 'https://www.prograd.ufop.br/calendario-academico';
+    $html = @file_get_contents($sourcePage);
+    if (!is_string($html) || $html === '') {
+        return [
+            'year' => $currentYear,
+            'source_page' => $sourcePage,
+            'source_pdf' => '',
+            'events_by_date' => [],
+            'upcoming' => [],
+            'cached_until' => date('Y-m-d', strtotime('+1 day')),
+        ];
+    }
+
+    $dom = new DOMDocument();
+    @$dom->loadHTML($html);
+    $xpath = new DOMXPath($dom);
+
+    $bestHref = '';
+    $bestYear = 0;
+    foreach ($xpath->query('//a[@href]') as $a) {
+        $label = trim(preg_replace('/\s+/u', ' ', (string)$a->textContent) ?? '');
+        if ($label === '' || stripos($label, 'calend') === false) {
+            continue;
+        }
+        if (preg_match('/ano letivo de\s*(\d{4})/iu', $label, $m) !== 1) {
+            continue;
+        }
+        $year = (int)$m[1];
+        if (stripos($label, 'presencial') === false) {
+            continue;
+        }
+        if ($bestHref === '' || ($year === $currentYear) || ($bestYear !== $currentYear && $year > $bestYear)) {
+            $href = trim((string)$a->getAttribute('href'));
+            if ($href !== '') {
+                $bestHref = $href;
+                $bestYear = $year;
+            }
+        }
+    }
+
+    if ($bestHref === '') {
+        return [
+            'year' => $currentYear,
+            'source_page' => $sourcePage,
+            'source_pdf' => '',
+            'events_by_date' => [],
+            'upcoming' => [],
+            'cached_until' => date('Y-m-d', strtotime('+1 day')),
+        ];
+    }
+
+    if (preg_match('#^https?://#i', $bestHref) !== 1) {
+        if (str_starts_with($bestHref, '/')) {
+            $bestHref = 'https://www.prograd.ufop.br' . $bestHref;
+        } else {
+            $bestHref = 'https://www.prograd.ufop.br/' . ltrim($bestHref, '/');
+        }
+    }
+
+    $pdfText = academic_calendar_extract_text_from_pdf($bestHref);
+    $eventsByDate = academic_calendar_parse_events_from_pdf_text($pdfText, $bestYear > 0 ? $bestYear : $currentYear);
+
+    $upcoming = [];
+    foreach ($eventsByDate as $date => $meta) {
+        if ($date < $today) {
+            continue;
+        }
+        foreach (($meta['items'] ?? []) as $item) {
+            $upcoming[] = [
+                'date' => $date,
+                'title' => (string)($item['title'] ?? ''),
+                'type' => (string)($item['type'] ?? 'event'),
+            ];
+            if (count($upcoming) >= 10) {
+                break 2;
+            }
+        }
+    }
+
+    $result = [
+        'year' => $bestYear > 0 ? $bestYear : $currentYear,
+        'source_page' => $sourcePage,
+        'source_pdf' => $bestHref,
+        'events_by_date' => $eventsByDate,
+        'upcoming' => $upcoming,
+        'cached_until' => date('Y-m-d', strtotime('+1 day')),
+    ];
+
+    $serialized = json_encode($result, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    if (is_string($serialized)) {
+        site_setting_set($cacheKey, $serialized);
+    }
+    return $result;
+}
 function hero_carousel_defaults(): array {
     return [
         [
@@ -149,7 +546,19 @@ function hero_carousel_defaults(): array {
         ],
     ];
 }
-function hero_carousel_get(): array {
+function hero_carousel_normalize_slide(array $input, array $fallback): array {
+    $image = trim((string)($input['image'] ?? $fallback['image'] ?? ''));
+    $badge = trim((string)($input['badge'] ?? $fallback['badge'] ?? ''));
+    $title = trim((string)($input['title'] ?? $fallback['title'] ?? ''));
+    $text = trim((string)($input['text'] ?? $fallback['text'] ?? ''));
+    return [
+        'image' => $image !== '' ? $image : (string)($fallback['image'] ?? ''),
+        'badge' => $badge !== '' ? $badge : (string)($fallback['badge'] ?? ''),
+        'title' => $title !== '' ? $title : (string)($fallback['title'] ?? ''),
+        'text' => $text !== '' ? $text : (string)($fallback['text'] ?? ''),
+    ];
+}
+function hero_carousel_get_legacy(): array {
     $defaults = hero_carousel_defaults();
     $slides = [];
     for ($i = 1; $i <= 3; $i++) {
@@ -163,19 +572,55 @@ function hero_carousel_get(): array {
     }
     return $slides;
 }
+function hero_carousel_get(): array {
+    $rawJson = trim(site_setting_get('hero_slides_json', ''));
+    if ($rawJson !== '') {
+        try {
+            $decoded = json_decode($rawJson, true, 512, JSON_THROW_ON_ERROR);
+            if (is_array($decoded)) {
+                $defaults = hero_carousel_defaults();
+                $fallback = $defaults[0] ?? ['image' => '', 'badge' => '', 'title' => '', 'text' => ''];
+                $slides = [];
+                foreach ($decoded as $slide) {
+                    if (!is_array($slide)) {
+                        continue;
+                    }
+                    $slides[] = hero_carousel_normalize_slide($slide, $fallback);
+                }
+                if ($slides !== []) {
+                    return $slides;
+                }
+            }
+        } catch (Throwable $e) {
+            error_log('Failed decoding hero_slides_json: ' . $e->getMessage());
+        }
+    }
+    return hero_carousel_get_legacy();
+}
 function hero_carousel_save(array $slides): void {
     $defaults = hero_carousel_defaults();
+    $fallback = $defaults[0] ?? ['image' => '', 'badge' => '', 'title' => '', 'text' => ''];
+    $normalized = [];
+    foreach ($slides as $slide) {
+        if (!is_array($slide)) {
+            continue;
+        }
+        $normalized[] = hero_carousel_normalize_slide($slide, $fallback);
+    }
+    if ($normalized === []) {
+        $normalized = $defaults;
+    }
+
+    $serialized = json_encode($normalized, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    site_setting_set('hero_slides_json', is_string($serialized) ? $serialized : '[]');
+
     for ($i = 1; $i <= 3; $i++) {
-        $input = $slides[$i - 1] ?? [];
-        $d = $defaults[$i - 1];
-        $image = trim((string)($input['image'] ?? $d['image']));
-        $badge = trim((string)($input['badge'] ?? $d['badge']));
-        $title = trim((string)($input['title'] ?? $d['title']));
-        $text = trim((string)($input['text'] ?? $d['text']));
-        site_setting_set("hero_slide_{$i}_image", $image !== '' ? $image : $d['image']);
-        site_setting_set("hero_slide_{$i}_badge", $badge !== '' ? $badge : $d['badge']);
-        site_setting_set("hero_slide_{$i}_title", $title !== '' ? $title : $d['title']);
-        site_setting_set("hero_slide_{$i}_text", $text !== '' ? $text : $d['text']);
+        $d = $defaults[$i - 1] ?? $fallback;
+        $slide = $normalized[$i - 1] ?? $d;
+        site_setting_set("hero_slide_{$i}_image", (string)($slide['image'] ?? $d['image']));
+        site_setting_set("hero_slide_{$i}_badge", (string)($slide['badge'] ?? $d['badge']));
+        site_setting_set("hero_slide_{$i}_title", (string)($slide['title'] ?? $d['title']));
+        site_setting_set("hero_slide_{$i}_text", (string)($slide['text'] ?? $d['text']));
     }
 }
 function horarios_cc_2026_template_html(): string {
@@ -1832,8 +2277,8 @@ function course_data(string $slug): array {
     ];
     return $courses[$slug] ?? ['name'=>'Curso','summary'=>'','content'=>'','modality'=>'','duration'=>'','shift'=>''];
 }
-function page_data(string $slug): array {
-    $pages = [
+function page_data_defaults(): array {
+    return [
       'quem-somos'=>['title'=>'Quem somos','summary'=>'Apresentação institucional do departamento, sua trajetória e suas áreas de atuação.','content'=>'O Departamento de Computação atua em ensino, pesquisa e extensão, oferecendo cursos de graduação e desenvolvendo ações acadêmicas e tecnológicas.'],
       'comunicacao-logo'=>['title'=>'Comunicação e logo','summary'=>'Diretrizes para uso do nome, identidade visual e materiais institucionais.','content'=>'Esta página pode concentrar versões do logotipo e padrões de comunicação institucional do departamento.'],
       'localizacao'=>['title'=>'Localização','summary'=>'Informações de localização física, acesso e referência institucional.','content'=>'O departamento está localizado no campus universitário, com atendimento presencial em dias úteis.'],
@@ -1842,8 +2287,36 @@ function page_data(string $slug): array {
       'informacoes-uteis'=>['title'=>'Informações Úteis','summary'=>'Orientações acadêmicas, formulários e instruções operacionais para estudantes.','content'=>'Inclua aqui calendários, orientações de matrícula, aproveitamento de estudos, equivalências e monitorias.'],
       'monografias'=>['title'=>'Monografias','summary'=>'Informações sobre disciplinas de monografia, banca, documentação e cronogramas.','content'=>'Esta página centraliza regulamentos, modelos de documentos, agendas de defesas e orientações para discentes e orientadores.'],
       'pesquisa'=>['title'=>'Pesquisa','summary'=>'Apresentação de linhas de pesquisa, grupos, projetos e produção científica.','content'=>'Esta seção organiza laboratórios, grupos de pesquisa, projetos financiados e oportunidades de iniciação científica.'],
+      'iniciacao-cientifica'=>['title'=>'Iniciacao Cientifica','summary'=>'Informacoes sobre bolsas, orientacao e oportunidades de iniciacao cientifica no DECOM.','content'=>'Use esta pagina para publicar editais internos, orientacoes para alunos e docentes, cronogramas e links importantes sobre iniciacao cientifica.'],
       'extensao'=>['title'=>'Extensão','summary'=>'Catálogo de projetos e ações de extensão vinculados ao departamento.','content'=>'Esta seção apresenta programas, projetos, oficinas, cursos e ações extensionistas.'],
       'cocic'=>['title'=>'Graduacao','summary'=>'Pagina da graduacao com apresentacao do curso, estrutura academica e informacoes uteis para alunos.','content'=>'A graduacao pode publicar aqui informacoes sobre matriz curricular, orientacoes academicas, documentos, calendario e comunicados aos estudantes.'],
     ];
-    return $pages[$slug] ?? ['title'=>'Página','summary'=>'','content'=>''];
 }
+function page_data(string $slug): array {
+    $defaults = page_data_defaults();
+    $fallback = ['title'=>'Página','summary'=>'','content'=>''];
+    $base = $defaults[$slug] ?? $fallback;
+    $title = trim(site_setting_get("page_{$slug}_title", (string)$base['title']));
+    $summary = trim(site_setting_get("page_{$slug}_summary", (string)$base['summary']));
+    $content = trim(site_setting_get("page_{$slug}_content", (string)$base['content']));
+    return [
+        'title' => $title !== '' ? $title : (string)$base['title'],
+        'summary' => $summary !== '' ? $summary : (string)$base['summary'],
+        'content' => $content !== '' ? $content : (string)$base['content'],
+    ];
+}
+function page_data_save(string $slug, array $data): void {
+    $defaults = page_data_defaults();
+    $fallback = ['title'=>'Página','summary'=>'','content'=>''];
+    $base = $defaults[$slug] ?? $fallback;
+    if (!preg_match('/^[a-z0-9-]+$/', $slug)) {
+        throw new InvalidArgumentException('Slug de pagina invalido.');
+    }
+    $title = trim((string)($data['title'] ?? $base['title']));
+    $summary = trim((string)($data['summary'] ?? $base['summary']));
+    $content = trim((string)($data['content'] ?? $base['content']));
+    site_setting_set("page_{$slug}_title", $title !== '' ? $title : (string)$base['title']);
+    site_setting_set("page_{$slug}_summary", $summary !== '' ? $summary : (string)$base['summary']);
+    site_setting_set("page_{$slug}_content", $content !== '' ? $content : (string)$base['content']);
+}
+

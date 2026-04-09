@@ -62,8 +62,10 @@ $peopleCount = admin_count_table('people_items');
                     <li class="nav-item"><a href="/admin/pessoal.php" class="nav-link"><p>Pessoal</p></a></li>
                     <li class="nav-item"><a href="/admin/atendimento-docentes.php" class="nav-link"><p>Atendimento Docentes</p></a></li>
                     <li class="nav-item"><a href="/admin/menu.php" class="nav-link"><p>Menu Principal</p></a></li>
+                    <li class="nav-item"><a href="/admin/decom-chefia.php" class="nav-link"><p>Chefia DECOM</p></a></li>
                     <li class="nav-item"><a href="/admin/carousel.php" class="nav-link"><p>Carrossel Home</p></a></li>
                     <li class="nav-item"><a href="/admin/horarios.php" class="nav-link"><p>Horarios de Aula</p></a></li>
+                    <li class="nav-item"><a href="/admin/pesquisa-iniciacao-cientifica.php" class="nav-link"><p>Iniciacao Cientifica</p></a></li>
                     <li class="nav-item"><a href="/admin/pos-graduacao.php" class="nav-link"><p>Pos-graduacao</p></a></li>
                     <li class="nav-item"><a href="/admin/pos-publicacoes.php?tipo=noticias" class="nav-link"><p>Noticias/Editais Pos</p></a></li>
                     <li class="nav-item"><a href="/admin/pos-subsite.php" class="nav-link"><p>Subsite Pos</p></a></li>
@@ -106,6 +108,15 @@ $peopleCount = admin_count_table('people_items');
                                 <p class="display-6 mb-2"><?= e((string)$editaisCount) ?></p>
                                 <p class="text-secondary">Registros cadastrados.</p>
                                 <a class="btn btn-secondary" href="/admin/content.php?type=editais">Gerenciar Editais</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card card-primary card-outline">
+                            <div class="card-header"><h3 class="card-title">Chefia DECOM</h3></div>
+                            <div class="card-body">
+                                <p class="mb-2">Edite os dados de chefia, secretarias e endereco institucional.</p>
+                                <a class="btn btn-primary" href="/admin/decom-chefia.php">Gerenciar Chefia</a>
                             </div>
                         </div>
                     </div>
@@ -154,6 +165,15 @@ $peopleCount = admin_count_table('people_items');
                             <div class="card-body">
                                 <p class="mb-2">Edite os itens de navegaÃ§Ã£o de GraduaÃ§Ã£o e PÃ³s-graduaÃ§Ã£o.</p>
                                 <a class="btn btn-success" href="/admin/menu.php">Gerenciar Menu</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card card-secondary card-outline">
+                            <div class="card-header"><h3 class="card-title">Iniciacao Cientifica</h3></div>
+                            <div class="card-body">
+                                <p class="mb-2">Edite a pagina publica de Iniciacao Cientifica dentro da aba Pesquisa.</p>
+                                <a class="btn btn-secondary" href="/admin/pesquisa-iniciacao-cientifica.php">Gerenciar Iniciacao Cientifica</a>
                             </div>
                         </div>
                     </div>

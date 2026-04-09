@@ -1,6 +1,6 @@
 FROM php:8.2-apache
 
-RUN apt-get update && apt-get install -y default-mysql-client \
+RUN apt-get update && apt-get install -y default-mysql-client poppler-utils \
     && docker-php-ext-install pdo pdo_mysql \
     && a2enmod rewrite \
     && rm -rf /var/lib/apt/lists/*
@@ -11,6 +11,8 @@ RUN { \
       echo 'error_reporting=E_ALL & ~E_DEPRECATED & ~E_STRICT'; \
       echo 'log_errors=On'; \
       echo 'default_charset=UTF-8'; \
+      echo 'upload_max_filesize=8M'; \
+      echo 'post_max_size=10M'; \
     } > /usr/local/etc/php/conf.d/zz-local.ini
 
 COPY apache-000-default.conf /etc/apache2/sites-available/000-default.conf

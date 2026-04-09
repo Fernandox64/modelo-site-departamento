@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../includes/config.php';
 
-require_admin_permission('manage_atendimento');
+require_admin_permission('manage_content');
 
 $error = null;
 $success = null;
@@ -12,37 +12,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!is_valid_csrf_token($_POST['csrf_token'] ?? null)) {
         $error = 'Token CSRF invalido.';
     } else {
-        $action = (string)($_POST['action'] ?? 'save');
         try {
-            if ($action === 'seed_people') {
-                atendimento_docentes_seed_from_people();
-                $success = 'Tabela preenchida automaticamente com docentes cadastrados.';
-            } else {
-                atendimento_docentes_save([
-                    'title' => (string)($_POST['title'] ?? ''),
-                    'summary' => (string)($_POST['summary'] ?? ''),
-                    'intro_html' => (string)($_POST['intro_html'] ?? ''),
-                    'table_html' => (string)($_POST['table_html'] ?? ''),
-                    'notes_html' => (string)($_POST['notes_html'] ?? ''),
-                    'source_url' => (string)($_POST['source_url'] ?? ''),
-                ]);
-                $success = 'Horarios de atendimento salvos com sucesso.';
+            $title = trim((string)($_POST['title'] ?? ''));
+            $summary = trim((string)($_POST['summary'] ?? ''));
+            $content = sanitize_rich_text((string)($_POST['content'] ?? ''));
+
+            if ($title === '' || $summary === '') {
+                throw new RuntimeException('Titulo e resumo sao obrigatorios.');
             }
+
+            page_data_save('iniciacao-cientifica', [
+                'title' => $title,
+                'summary' => $summary,
+                'content' => $content,
+            ]);
+            admin_audit_log('page_update', ['slug' => 'iniciacao-cientifica', 'title' => $title], 'site_settings');
+            $success = 'Pagina de Iniciacao Cientifica atualizada com sucesso.';
         } catch (Throwable $e) {
-            $error = 'Falha ao salvar dados de atendimento.';
-            error_log('Admin atendimento-docentes error: ' . $e->getMessage());
+            $error = 'Falha ao salvar a pagina: ' . $e->getMessage();
+            error_log('Admin iniciacao-cientifica error: ' . $e->getMessage());
         }
     }
 }
 
-$data = atendimento_docentes_get();
+$page = page_data('iniciacao-cientifica');
 ?>
 <!doctype html>
 <html lang="pt-BR">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Admin - Atendimento Docentes</title>
+    <title>Admin - Iniciacao Cientifica</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-rc3/dist/css/adminlte.min.css">
     <script src="https://cdn.jsdelivr.net/npm/tinymce@7.9.1/tinymce.min.js" referrerpolicy="origin"></script>
@@ -79,11 +79,12 @@ $data = atendimento_docentes_get();
                     <li class="nav-item"><a href="/admin/content.php?type=defesas" class="nav-link"><p>Defesas</p></a></li>
                     <li class="nav-item"><a href="/admin/content.php?type=estagios" class="nav-link"><p>Estagios e Empregos</p></a></li>
                     <li class="nav-item"><a href="/admin/pessoal.php" class="nav-link"><p>Pessoal</p></a></li>
-                    <li class="nav-item"><a href="/admin/atendimento-docentes.php" class="nav-link active"><p>Atendimento Docentes</p></a></li>
+                    <li class="nav-item"><a href="/admin/atendimento-docentes.php" class="nav-link"><p>Atendimento Docentes</p></a></li>
                     <li class="nav-item"><a href="/admin/menu.php" class="nav-link"><p>Menu Principal</p></a></li>
                     <li class="nav-item"><a href="/admin/decom-chefia.php" class="nav-link"><p>Chefia DECOM</p></a></li>
                     <li class="nav-item"><a href="/admin/carousel.php" class="nav-link"><p>Carrossel Home</p></a></li>
                     <li class="nav-item"><a href="/admin/horarios.php" class="nav-link"><p>Horarios de Aula</p></a></li>
+                    <li class="nav-item"><a href="/admin/pesquisa-iniciacao-cientifica.php" class="nav-link active"><p>Iniciacao Cientifica</p></a></li>
                     <li class="nav-item"><a href="/admin/pos-graduacao.php" class="nav-link"><p>Pos-graduacao</p></a></li>
                     <li class="nav-item"><a href="/admin/pos-publicacoes.php?tipo=noticias" class="nav-link"><p>Noticias/Editais Pos</p></a></li>
                     <li class="nav-item"><a href="/admin/pos-subsite.php" class="nav-link"><p>Subsite Pos</p></a></li>
@@ -98,8 +99,8 @@ $data = atendimento_docentes_get();
         <div class="app-content-header">
             <div class="container-fluid">
                 <div class="d-flex justify-content-between align-items-center">
-                    <h3 class="mb-0">Horarios de Atendimento dos Docentes</h3>
-                    <a class="btn btn-dark btn-sm" href="/pessoal/atendimento-docentes.php" target="_blank" rel="noopener">Ver pagina publica</a>
+                    <h3 class="mb-0">Editar Iniciacao Cientifica</h3>
+                    <a class="btn btn-dark btn-sm" href="/pesquisa/iniciacao-cientifica.php" target="_blank" rel="noopener">Ver pagina publica</a>
                 </div>
             </div>
         </div>
@@ -108,32 +109,26 @@ $data = atendimento_docentes_get();
                 <?php if ($error): ?><div class="alert alert-danger"><?= e($error) ?></div><?php endif; ?>
                 <?php if ($success): ?><div class="alert alert-success"><?= e($success) ?></div><?php endif; ?>
 
-                <div class="card mb-4">
-                    <div class="card-header"><h3 class="card-title">Preencher automaticamente</h3></div>
-                    <div class="card-body">
-                        <form method="post">
-                            <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
-                            <input type="hidden" name="action" value="seed_people">
-                            <button class="btn btn-outline-primary" type="submit">Gerar tabela com docentes cadastrados</button>
-                        </form>
-                    </div>
-                </div>
-
                 <div class="card">
-                    <div class="card-header"><h3 class="card-title">Conteudo editavel</h3></div>
+                    <div class="card-header"><h3 class="card-title">Conteudo da pagina</h3></div>
                     <div class="card-body">
                         <form method="post">
                             <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
-                            <input type="hidden" name="action" value="save">
-                            <div class="row g-3">
-                                <div class="col-md-8"><label class="form-label">Titulo</label><input class="form-control" name="title" value="<?= e((string)$data['title']) ?>"></div>
-                                <div class="col-md-4"><label class="form-label">URL de referencia</label><input class="form-control" name="source_url" value="<?= e((string)$data['source_url']) ?>"></div>
-                                <div class="col-12"><label class="form-label">Resumo</label><textarea class="form-control" name="summary" rows="2"><?= e((string)$data['summary']) ?></textarea></div>
-                                <div class="col-12"><label class="form-label">Introducao</label><textarea class="form-control editor" name="intro_html" rows="5"><?= e((string)$data['intro_html']) ?></textarea></div>
-                                <div class="col-12"><label class="form-label">Tabela semanal (HTML editavel)</label><textarea class="form-control editor" name="table_html" rows="18"><?= e((string)$data['table_html']) ?></textarea></div>
-                                <div class="col-12"><label class="form-label">Observacoes</label><textarea class="form-control editor" name="notes_html" rows="6"><?= e((string)$data['notes_html']) ?></textarea></div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Titulo</label>
+                                <input class="form-control" name="title" required value="<?= e((string)$page['title']) ?>">
                             </div>
-                            <div class="mt-3"><button class="btn btn-primary" type="submit">Salvar</button></div>
+                            <div class="mb-3">
+                                <label class="form-label">Resumo</label>
+                                <textarea class="form-control" name="summary" rows="2" required><?= e((string)$page['summary']) ?></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Conteudo</label>
+                                <textarea class="form-control editor" name="content" rows="12"><?= e((string)$page['content']) ?></textarea>
+                            </div>
+
+                            <button class="btn btn-primary" type="submit">Salvar conteudo</button>
                         </form>
                     </div>
                 </div>
@@ -146,13 +141,12 @@ $data = atendimento_docentes_get();
 <script>
 tinymce.init({
   selector: '.editor',
-  height: 300,
+  height: 320,
   menubar: false,
   plugins: 'lists link table code',
-  toolbar: 'undo redo | bold italic | bullist numlist | link | table | code',
+  toolbar: 'undo redo | bold italic | bullist numlist | link | code',
   branding: false
 });
 </script>
 </body>
 </html>
-

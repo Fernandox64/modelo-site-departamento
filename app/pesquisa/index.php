@@ -25,6 +25,16 @@ page_header('Pesquisa');
     <div class="card news-card mt-4">
         <div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
             <div>
+                <h2 class="h5 mb-1">Iniciacao Cientifica</h2>
+                <p class="text-muted mb-0">Consulte orientacoes, oportunidades e informacoes sobre bolsas e projetos.</p>
+            </div>
+            <a class="btn btn-primary" href="/pesquisa/iniciacao-cientifica.php">Ver iniciacao cientifica</a>
+        </div>
+    </div>
+
+    <div class="card news-card mt-4">
+        <div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+            <div>
                 <h2 class="h5 mb-1">Projetos de Pesquisa e Extensao</h2>
                 <p class="text-muted mb-0">Acesse os projetos institucionais e suas frentes de desenvolvimento.</p>
             </div>

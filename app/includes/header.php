@@ -16,18 +16,18 @@ $menuPosGraduacao = primary_menu_item('pos_graduacao');
 <body>
 <div class="topbar py-2">
     <div class="container d-flex flex-wrap justify-content-between gap-2">
-        <div><?= e(SITE_UNIVERSITY) ?> · <?= e(SITE_SIGLA) ?></div>
-        <div><?= e(SITE_PHONE) ?> · <?= e(SITE_EMAIL) ?></div>
+        <div><?= e(SITE_UNIVERSITY) ?> &middot; <?= e(SITE_SIGLA) ?></div>
+        <div><?= e(SITE_PHONE) ?> &middot; <?= e(SITE_EMAIL) ?></div>
     </div>
 </div>
 
-<nav class="navbar navbar-expand-lg bg-body-tertiary border-bottom sticky-top">
-    <div class="container">
-        <a class="navbar-brand d-flex align-items-center" href="/" title="DECOM UFOP" style="height:40px;padding-top:0;padding-bottom:0;overflow:visible;">
+<nav class="navbar navbar-expand-lg bg-body-tertiary border-bottom sticky-top py-1">
+    <div class="container align-items-center">
+        <a class="navbar-brand d-flex align-items-center my-0 py-0 me-3" href="/" title="DECOM UFOP" style="height:24px;overflow:hidden;">
             <img
-                src="https://www.decom.ufop.br/decom/site_media/img/decom_logo.png"
+                src="http://www3.decom.ufop.br/decom/site_media/img/logos-ufop-decom.png"
                 alt="Logo DECOM UFOP"
-                style="height:48px;width:auto;display:block"
+                style="height:24px;width:auto;display:block"
             >
         </a>
         <button
@@ -49,6 +49,7 @@ $menuPosGraduacao = primary_menu_item('pos_graduacao');
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">DECOM</a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="/decom/quem-somos.php">Quem somos</a></li>
+                        <li><a class="dropdown-item" href="/decom/chefia.php">Chefia</a></li>
                         <li><a class="dropdown-item" href="/decom/comunicacao-logo.php">Comunicacao e logo</a></li>
                         <li><a class="dropdown-item" href="/decom/localizacao.php">Localizacao</a></li>
                         <li><a class="dropdown-item" href="/decom/mapa-campus.php">Mapa do campus</a></li>
@@ -97,6 +98,7 @@ $menuPosGraduacao = primary_menu_item('pos_graduacao');
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="/pesquisa/index.php">Pesquisa</a></li>
                         <li><a class="dropdown-item" href="/pesquisa/labs.php">Laboratorios</a></li>
+                        <li><a class="dropdown-item" href="/pesquisa/iniciacao-cientifica.php">Iniciacao Cientifica</a></li>
                         <li><a class="dropdown-item" href="/pesquisa/projetos.php">Projetos de Pesquisa/Extensao</a></li>
                     </ul>
                 </li>
@@ -109,8 +111,6 @@ $menuPosGraduacao = primary_menu_item('pos_graduacao');
                     </ul>
                 </li>
 
-                <li class="nav-item"><a class="nav-link" href="/pessoal/atendimento-docentes.php">Atendimento</a></li>
-                <li class="nav-item"><a class="nav-link" href="/ensino/horarios-de-aula.php">Horario</a></li>
                 <li class="nav-item"><a class="nav-link" href="/contato/index.php">Contato</a></li>
             </ul>
 

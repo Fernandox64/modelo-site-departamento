@@ -16,18 +16,18 @@ page_header('Comunicacao e logo');
                     <h2 class="h5 mb-3">Logomarca oficial do DECOM</h2>
                     <div class="border rounded p-4 bg-light text-center mb-3">
                         <img
-                            src="https://www.decom.ufop.br/decom/site_media/img/decom_logo.png"
+                            src="http://www3.decom.ufop.br/decom/site_media/img/logos-ufop-decom.png"
                             alt="Logomarca oficial do DECOM UFOP"
                             style="max-width:100%;height:auto"
                         >
                     </div>
                     <div class="d-flex flex-wrap gap-2">
                         <a class="btn btn-primary btn-sm" target="_blank" rel="noopener"
-                           href="https://www.decom.ufop.br/decom/site_media/img/decom_logo.svg">
+                           href="http://www3.decom.ufop.br/decom/site_media/img/logos-ufop-decom.png">
                             Baixar logo (SVG)
                         </a>
                         <a class="btn btn-outline-primary btn-sm" target="_blank" rel="noopener"
-                           href="https://www.decom.ufop.br/decom/site_media/img/decom_logo.png">
+                           href="http://www3.decom.ufop.br/decom/site_media/img/logos-ufop-decom.png">
                             Baixar logo (PNG)
                         </a>
                     </div>

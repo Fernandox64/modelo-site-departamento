@@ -184,3 +184,60 @@ body {
 footer.border-top {
     border-top-color: rgba(84, 120, 255, .25) !important;
 }
+
+.student-calendar {
+    background: #f7f9fc;
+}
+
+.calendar-table th,
+.calendar-table td {
+    width: 14.285%;
+    min-width: 40px;
+    height: 44px;
+    vertical-align: middle;
+}
+
+.calendar-table th {
+    color: #425071;
+    font-weight: 700;
+    text-transform: lowercase;
+}
+
+.calendar-empty {
+    background: #edf1f8;
+}
+
+.calendar-day-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 0;
+    background: transparent;
+    color: #13254f;
+    font-weight: 700;
+}
+
+.calendar-day-btn.selected {
+    background: #1e66e5;
+    color: #fff;
+}
+
+.calendar-holiday-bg {
+    background: #fff1f1;
+}
+
+.calendar-dot {
+    display: block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    margin: 0 auto;
+}
+
+.dot-event {
+    background: #f3b400;
+}
+
+.dot-holiday {
+    background: #d33232;
+}

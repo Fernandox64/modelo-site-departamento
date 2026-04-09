@@ -28,7 +28,7 @@ if (($file['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
 
 $tmp = (string)$file['tmp_name'];
 $size = (int)($file['size'] ?? 0);
-if ($size <= 0 || $size > 5 * 1024 * 1024) {
+if ($size <= 0 || $size > 8 * 1024 * 1024) {
     http_response_code(400);
     echo json_encode(['error' => 'Invalid file size']);
     exit;
