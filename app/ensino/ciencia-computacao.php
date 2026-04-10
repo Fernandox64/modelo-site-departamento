@@ -66,6 +66,24 @@ page_header('Graduacao - Ciencia da Computacao e Inteligencia Artificial');
                         </div>
                     </div>
 
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-body">
+                            <h2 class="h5 mb-3">Grade curricular (imagem e download)</h2>
+                            <p class="text-muted mb-3">Visualizacao da grade curricular utilizada pelo curso.</p>
+                            <a href="/uploads/grade/grade_curricular.pdf" target="_blank" rel="noopener">
+                                <img
+                                    src="/uploads/grade/grade_curricular_preview.jpg"
+                                    alt="Preview da grade curricular de Ciencia da Computacao"
+                                    class="img-fluid rounded border"
+                                >
+                            </a>
+                            <div class="mt-3 d-flex flex-wrap gap-2">
+                                <a class="btn btn-primary btn-sm" href="/uploads/grade/grade_curricular.pdf" download>Baixar grade curricular (PDF)</a>
+                                <a class="btn btn-outline-secondary btn-sm" href="/uploads/grade/grade_curricular.pdf" target="_blank" rel="noopener">Abrir PDF</a>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="card shadow-sm">
                         <div class="card-body">
                             <h2 class="h5 mb-3">O que o curso oferece</h2>

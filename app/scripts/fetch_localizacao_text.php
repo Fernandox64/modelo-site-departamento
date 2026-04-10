@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 $ctx=stream_context_create([
  'http'=>['timeout'=>25,'header'=>"User-Agent: decom-localizacao-fetch/1.0\r\n"],
  'ssl'=>['verify_peer'=>false,'verify_peer_name'=>false],

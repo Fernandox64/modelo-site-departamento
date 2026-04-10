@@ -42,6 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Admin Login</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-rc3/dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="/assets/css/admin.css">
     <style>
         body.login-page {
             background-image:
@@ -85,6 +86,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <button type="submit" class="btn btn-primary w-100">Entrar</button>
                     </div>
                 </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <a href="/" class="btn btn-outline-secondary w-100">Voltar para pagina inicial</a>
+                    </div>
+                </div>
             </form>
         </div>
     </div>
@@ -93,3 +99,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <script src="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-rc3/dist/js/adminlte.min.js"></script>
 </body>
 </html>
+

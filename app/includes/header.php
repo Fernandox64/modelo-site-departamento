@@ -1,7 +1,16 @@
 <?php
 header('Content-Type: text/html; charset=UTF-8');
-$menuGraduacao = primary_menu_item('graduacao');
-$menuPosGraduacao = primary_menu_item('pos_graduacao');
+$logo = site_logo_settings_get();
+$logoUrl = (string)($logo['url'] ?? '');
+$logoHeight = (int)($logo['height'] ?? 32);
+if ($logoHeight < 20) {
+    $logoHeight = 20;
+}
+if ($logoHeight > 80) {
+    $logoHeight = 80;
+}
+$renderLogoHeight = min(80, $logoHeight + 8);
+$ufopLogoUrl = '/assets/images/logo-ufop.png';
 ?>
 <!doctype html>
 <html lang="pt-BR">
@@ -22,12 +31,17 @@ $menuPosGraduacao = primary_menu_item('pos_graduacao');
 </div>
 
 <nav class="navbar navbar-expand-lg bg-body-tertiary border-bottom sticky-top py-1">
-    <div class="container align-items-center">
-        <a class="navbar-brand d-flex align-items-center my-0 py-0 me-3" href="/" title="DECOM UFOP" style="height:24px;overflow:hidden;">
+    <div class="container nav-main-container align-items-center">
+        <a class="navbar-brand d-flex align-items-center gap-2 my-0 py-0 me-3" href="/" title="DECOM UFOP" style="height:<?= e((string)$renderLogoHeight) ?>px;overflow:hidden;">
             <img
-                src="http://www3.decom.ufop.br/decom/site_media/img/logos-ufop-decom.png"
+                src="<?= e($ufopLogoUrl) ?>"
+                alt="Logo UFOP"
+                style="height:<?= e((string)$renderLogoHeight) ?>px;width:auto;display:block"
+            >
+            <img
+                src="<?= e($logoUrl) ?>"
                 alt="Logo DECOM UFOP"
-                style="height:24px;width:auto;display:block"
+                style="height:<?= e((string)$renderLogoHeight) ?>px;width:auto;display:block"
             >
         </a>
         <button
@@ -42,7 +56,7 @@ $menuPosGraduacao = primary_menu_item('pos_graduacao');
         </button>
 
         <div class="collapse navbar-collapse" id="navbarMain">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <ul class="navbar-nav main-nav-list me-auto mb-2 mb-lg-0">
                 <li class="nav-item"><a class="nav-link" href="/">Inicio</a></li>
 
                 <li class="nav-item dropdown">
@@ -79,19 +93,12 @@ $menuPosGraduacao = primary_menu_item('pos_graduacao');
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Ensino</a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="/ensino/ciencia-computacao.php">Ciencia da Computacao</a></li>
-                        <li><a class="dropdown-item" href="/pos/inicio.php">Pos-graduacao em Computacao (Subsite)</a></li>
-                        <li><a class="dropdown-item" href="/pos/noticias.php">Noticias da Pos</a></li>
-                        <li><a class="dropdown-item" href="/pos/editais.php">Editais da Pos</a></li>
-                        <li><a class="dropdown-item" href="/pos/processo-seletivo.php">Processo Seletivo (PPGCC)</a></li>
                         <li><a class="dropdown-item" href="/ensino/inteligencia-artificial.php">Inteligencia Artificial</a></li>
                         <li><a class="dropdown-item" href="/ensino/horarios-de-aula.php">Horarios de Aula</a></li>
                         <li><a class="dropdown-item" href="/ensino/informacoes-uteis.php">Informacoes Uteis</a></li>
                         <li><a class="dropdown-item" href="/ensino/monografias.php">Monografias</a></li>
                     </ul>
                 </li>
-
-                <li class="nav-item"><a class="nav-link" href="<?= e((string)$menuGraduacao['url']) ?>"><?= e((string)$menuGraduacao['label']) ?></a></li>
-                <li class="nav-item"><a class="nav-link" href="<?= e((string)$menuPosGraduacao['url']) ?>"><?= e((string)$menuPosGraduacao['label']) ?></a></li>
 
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Pesquisa</a>
@@ -112,13 +119,12 @@ $menuPosGraduacao = primary_menu_item('pos_graduacao');
                 </li>
 
                 <li class="nav-item"><a class="nav-link" href="/contato/index.php">Contato</a></li>
+                <li class="nav-item d-flex align-items-center ms-lg-1">
+                    <a class="btn btn-primary btn-sm nav-admin-btn" href="/admin/login.php" aria-label="Area administrativa" title="Area administrativa">
+                        <i class="bi bi-person-workspace"></i>
+                    </a>
+                </li>
             </ul>
-
-            <div class="d-flex gap-2">
-                <a class="btn btn-primary btn-sm" href="/admin/login.php" aria-label="Area administrativa" title="Area administrativa">
-                    <i class="bi bi-person-workspace"></i>
-                </a>
-            </div>
         </div>
     </div>
 </nav>

@@ -9,7 +9,7 @@ function apply_security_headers(): void {
     header('X-Content-Type-Options: nosniff');
     header('Referrer-Policy: strict-origin-when-cross-origin');
     header('Permissions-Policy: geolocation=(), microphone=(), camera=()');
-    header("Content-Security-Policy: default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'; style-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'; img-src 'self' data: https: http:; font-src 'self' https://cdn.jsdelivr.net data:; connect-src 'self'; frame-ancestors 'self'; base-uri 'self'; form-action 'self'");
+    header("Content-Security-Policy: default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'; style-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'; img-src 'self' data: https: http:; font-src 'self' https://cdn.jsdelivr.net data:; connect-src 'self'; frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://player.vimeo.com; frame-ancestors 'self'; base-uri 'self'; form-action 'self'");
     $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
         || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https');
     if ($isHttps) {
@@ -62,11 +62,24 @@ function db(): PDO {
 }
 function e($v): string { return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'); }
 function sanitize_rich_text(string $html): string {
-    $allowed = '<p><br><strong><b><em><i><u><ul><ol><li><a><h2><h3><h4><blockquote><img><table><thead><tbody><tr><td><th><hr>';
+    $allowed = '<p><br><strong><b><em><i><u><ul><ol><li><a><h2><h3><h4><blockquote><img><table><thead><tbody><tr><td><th><hr><div><span><iframe>';
     $clean = strip_tags($html, $allowed);
     $clean = preg_replace('/\sstyle\s*=\s*("|\').*?\1/iu', '', $clean) ?? $clean;
     $clean = preg_replace('/\son\w+\s*=\s*("|\').*?\1/iu', '', $clean) ?? $clean;
     $clean = preg_replace('/href\s*=\s*("|\')\s*javascript:[^"\']*\1/iu', 'href="#"', $clean) ?? $clean;
+    $clean = preg_replace('/src\s*=\s*("|\')\s*javascript:[^"\']*\1/iu', 'src=""', $clean) ?? $clean;
+    $clean = preg_replace_callback(
+        '/<iframe\b[^>]*\bsrc\s*=\s*("|\')([^"\']+)\1[^>]*>\s*<\/iframe>/iu',
+        static function (array $m): string {
+            $src = trim((string)($m[2] ?? ''));
+            if ($src === '') {
+                return '';
+            }
+            $ok = preg_match('#^https://(www\.youtube\.com|www\.youtube-nocookie\.com|player\.vimeo\.com)/#i', $src) === 1;
+            return $ok ? $m[0] : '';
+        },
+        $clean
+    ) ?? $clean;
     return trim($clean);
 }
 function render_rich_text(string $content): string {
@@ -80,7 +93,10 @@ function render_rich_text(string $content): string {
     }
     return $safe;
 }
-function page_header(string $title): void { $pageTitle = $title; require __DIR__ . '/header.php'; }
+function page_header(string $title): void {
+    $pageTitle = $title;
+    require __DIR__ . '/header.php';
+}
 function page_footer(): void { require __DIR__ . '/footer.php'; }
 function is_admin_logged_in(): bool { return !empty($_SESSION['admin_ok']); }
 function redirect(string $path): void { header("Location: {$path}"); exit; }
@@ -126,6 +142,79 @@ function site_setting_set(string $key, string $value): void {
          ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)'
     );
     $stmt->execute([':k' => $key, ':v' => $value]);
+}
+
+function contact_settings_defaults(): array {
+    return [
+        'public_email' => SITE_EMAIL,
+        'public_phone' => SITE_PHONE,
+        'public_address' => SITE_ADDRESS,
+        'recipient_email' => SITE_EMAIL,
+        'subject_prefix' => 'Contato Site DECOM',
+    ];
+}
+
+function contact_settings_get(): array {
+    $d = contact_settings_defaults();
+    return [
+        'public_email' => trim(site_setting_get('contact_public_email', $d['public_email'])),
+        'public_phone' => trim(site_setting_get('contact_public_phone', $d['public_phone'])),
+        'public_address' => trim(site_setting_get('contact_public_address', $d['public_address'])),
+        'recipient_email' => trim(site_setting_get('contact_recipient_email', $d['recipient_email'])),
+        'subject_prefix' => trim(site_setting_get('contact_subject_prefix', $d['subject_prefix'])),
+    ];
+}
+
+function contact_settings_save(array $data): void {
+    $d = contact_settings_defaults();
+    $publicEmail = trim((string)($data['public_email'] ?? $d['public_email']));
+    $publicPhone = trim((string)($data['public_phone'] ?? $d['public_phone']));
+    $publicAddress = trim((string)($data['public_address'] ?? $d['public_address']));
+    $recipientEmail = trim((string)($data['recipient_email'] ?? $d['recipient_email']));
+    $subjectPrefix = trim((string)($data['subject_prefix'] ?? $d['subject_prefix']));
+
+    if ($publicEmail !== '' && filter_var($publicEmail, FILTER_VALIDATE_EMAIL) === false) {
+        throw new InvalidArgumentException('Email publico invalido.');
+    }
+    if ($recipientEmail === '' || filter_var($recipientEmail, FILTER_VALIDATE_EMAIL) === false) {
+        throw new InvalidArgumentException('Email destinatario invalido.');
+    }
+
+    site_setting_set('contact_public_email', $publicEmail !== '' ? $publicEmail : $d['public_email']);
+    site_setting_set('contact_public_phone', $publicPhone !== '' ? $publicPhone : $d['public_phone']);
+    site_setting_set('contact_public_address', $publicAddress !== '' ? $publicAddress : $d['public_address']);
+    site_setting_set('contact_recipient_email', $recipientEmail);
+    site_setting_set('contact_subject_prefix', $subjectPrefix !== '' ? $subjectPrefix : $d['subject_prefix']);
+}
+
+function contact_form_send(string $name, string $email, string $message): bool {
+    $settings = contact_settings_get();
+    $to = trim((string)$settings['recipient_email']);
+    if ($to === '' || filter_var($to, FILTER_VALIDATE_EMAIL) === false) {
+        $to = SITE_EMAIL;
+    }
+
+    $safeName = trim(preg_replace('/[\r\n]+/', ' ', $name) ?? $name);
+    $safeEmail = trim(preg_replace('/[\r\n]+/', '', $email) ?? $email);
+    $subjectPrefix = trim((string)$settings['subject_prefix']);
+    if ($subjectPrefix === '') {
+        $subjectPrefix = 'Contato Site DECOM';
+    }
+    $subject = $subjectPrefix . ' - ' . ($safeName !== '' ? $safeName : 'Visitante');
+
+    $body = "Nome: {$safeName}\n";
+    $body .= "Email: {$safeEmail}\n\n";
+    $body .= "Mensagem:\n{$message}\n";
+
+    $headers = [];
+    $headers[] = 'MIME-Version: 1.0';
+    $headers[] = 'Content-Type: text/plain; charset=UTF-8';
+    $headers[] = 'From: DECOM Site <no-reply@' . ($_SERVER['HTTP_HOST'] ?? 'localhost') . '>';
+    if ($safeEmail !== '' && filter_var($safeEmail, FILTER_VALIDATE_EMAIL)) {
+        $headers[] = 'Reply-To: ' . $safeEmail;
+    }
+
+    return @mail($to, $subject, $body, implode("\r\n", $headers));
 }
 
 function decom_chefia_defaults(): array {
@@ -527,19 +616,19 @@ function academic_calendar_fetch_ufop(): array {
 function hero_carousel_defaults(): array {
     return [
         [
-            'image' => '/assets/images/carousel/decom-campus.png',
+            'image' => '/assets/images/carousel/defaults/home-1.png',
             'badge' => 'Departamento de Computacao',
             'title' => 'Portal Institucional do DECOM/UFOP',
             'text' => 'Comunicacao academica e administrativa com noticias, editais, defesas e servicos para alunos.',
         ],
         [
-            'image' => '/assets/images/carousel/ufop-campus-map.png',
+            'image' => '/assets/images/carousel/defaults/home-2.png',
             'badge' => 'Ensino e Estrutura',
             'title' => 'Informacoes de cursos, horarios e atendimento',
             'text' => 'Acesso rapido para graduacao, pos, monografias e servicos ao estudante.',
         ],
         [
-            'image' => '/assets/images/carousel/tech-circuit.jpg',
+            'image' => '/assets/images/carousel/defaults/home-6.jpg',
             'badge' => 'Pesquisa e Inovacao',
             'title' => 'Tecnologia, ciencia de dados e inteligencia artificial',
             'text' => 'Projetos, laboratorios e iniciativas do DECOM para formacao e impacto social.',
@@ -557,6 +646,23 @@ function hero_carousel_normalize_slide(array $input, array $fallback): array {
         'title' => $title !== '' ? $title : (string)($fallback['title'] ?? ''),
         'text' => $text !== '' ? $text : (string)($fallback['text'] ?? ''),
     ];
+}
+function hero_carousel_resolve_image_path(string $image, string $fallbackImage): string {
+    $image = trim($image);
+    $fallbackImage = trim($fallbackImage);
+    if ($image === '') {
+        return $fallbackImage;
+    }
+    if (preg_match('#^https?://#i', $image) === 1) {
+        return $image;
+    }
+    if (str_starts_with($image, '/')) {
+        $absolute = dirname(__DIR__) . $image;
+        if (!is_file($absolute)) {
+            return $fallbackImage;
+        }
+    }
+    return $image;
 }
 function hero_carousel_get_legacy(): array {
     $defaults = hero_carousel_defaults();
@@ -588,6 +694,13 @@ function hero_carousel_get(): array {
                     $slides[] = hero_carousel_normalize_slide($slide, $fallback);
                 }
                 if ($slides !== []) {
+                    foreach ($slides as $i => $slide) {
+                        $fallbackSlide = $defaults[$i] ?? $fallback;
+                        $slides[$i]['image'] = hero_carousel_resolve_image_path(
+                            (string)($slide['image'] ?? ''),
+                            (string)($fallbackSlide['image'] ?? $fallback['image'] ?? '')
+                        );
+                    }
                     return $slides;
                 }
             }
@@ -595,7 +708,17 @@ function hero_carousel_get(): array {
             error_log('Failed decoding hero_slides_json: ' . $e->getMessage());
         }
     }
-    return hero_carousel_get_legacy();
+    $legacy = hero_carousel_get_legacy();
+    $defaults = hero_carousel_defaults();
+    $fallback = $defaults[0] ?? ['image' => '/assets/images/carousel/defaults/home-1.png'];
+    foreach ($legacy as $i => $slide) {
+        $fallbackSlide = $defaults[$i] ?? $fallback;
+        $legacy[$i]['image'] = hero_carousel_resolve_image_path(
+            (string)($slide['image'] ?? ''),
+            (string)($fallbackSlide['image'] ?? $fallback['image'] ?? '/assets/images/carousel/defaults/home-1.png')
+        );
+    }
+    return $legacy;
 }
 function hero_carousel_save(array $slides): void {
     $defaults = hero_carousel_defaults();
@@ -1066,6 +1189,46 @@ function primary_menu_item(string $slot): array {
         'label' => $label !== '' ? $label : $default['label'],
         'url' => $url,
     ];
+}
+function site_logo_defaults(): array {
+    return [
+        'url' => 'http://www3.decom.ufop.br/decom/site_media/img/logos-ufop-decom.png',
+        'height' => 40,
+    ];
+}
+function site_logo_settings_get(): array {
+    $d = site_logo_defaults();
+    $url = trim(site_setting_get('site_logo_url', $d['url']));
+    $height = (int)site_setting_get('site_logo_height', (string)$d['height']);
+    if ($height < 20) {
+        $height = 20;
+    }
+    if ($height > 80) {
+        $height = 80;
+    }
+    if ($url === '') {
+        $url = $d['url'];
+    }
+    return [
+        'url' => $url,
+        'height' => $height,
+    ];
+}
+function site_logo_settings_save(array $data): void {
+    $d = site_logo_defaults();
+    $url = trim((string)($data['url'] ?? $d['url']));
+    $height = (int)($data['height'] ?? $d['height']);
+    if ($height < 20) {
+        $height = 20;
+    }
+    if ($height > 80) {
+        $height = 80;
+    }
+    if ($url === '') {
+        $url = $d['url'];
+    }
+    site_setting_set('site_logo_url', $url);
+    site_setting_set('site_logo_height', (string)$height);
 }
 function ensure_ppgcc_tables(): void {
     static $ready = false;
@@ -2234,29 +2397,60 @@ function research_labs_data(): array {
         ['slug' => 'xr4good', 'name' => 'XR4Good', 'summary' => 'Laboratorio Tematico de Realidade Estendida.', 'site_url' => 'http://xr4goodlab.decom.ufop.br/'],
     ];
 }
-function fetch_research_projects(): array {
+function research_project_types(): array {
+    return ['pesquisa', 'laboratorio', 'iniciacao-cientifica', 'extensao'];
+}
+
+function research_project_type_label(string $type): string {
+    $map = [
+        'pesquisa' => 'Pesquisa',
+        'laboratorio' => 'Laboratorio',
+        'iniciacao-cientifica' => 'Iniciacao Cientifica',
+        'extensao' => 'Extensao',
+    ];
+    return $map[$type] ?? 'Projeto';
+}
+
+function normalize_research_project_type(string $type, string $fallback = 'pesquisa'): string {
+    return in_array($type, research_project_types(), true) ? $type : $fallback;
+}
+
+function fetch_research_projects(?string $projectType = null): array {
+    ensure_research_projects_tables();
     try {
-        $sql = "SELECT slug, title, project_type, summary, site_url, coordinator
+        $projectType = $projectType !== null ? normalize_research_project_type($projectType, '') : null;
+        $sql = "SELECT id, slug, title, project_type, summary, description, image_url, site_url, coordinator, is_active, sort_order
                 FROM research_projects
-                WHERE is_active = 1
+                WHERE is_active = 1";
+        $params = [];
+        if ($projectType !== null && $projectType !== '') {
+            $sql .= " AND project_type = :project_type";
+            $params[':project_type'] = $projectType;
+        }
+        $sql .= "
                 ORDER BY sort_order ASC, title ASC, id ASC";
-        return db()->query($sql)->fetchAll();
+        $stmt = db()->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll() ?: [];
     } catch (Throwable $e) {
         error_log('Failed loading research_projects: ' . $e->getMessage());
         return [];
     }
 }
-function research_projects_data(): array {
-    $items = fetch_research_projects();
+function research_projects_data(?string $projectType = null): array {
+    $projectType = $projectType !== null ? normalize_research_project_type($projectType, '') : null;
+    $items = fetch_research_projects($projectType !== '' ? $projectType : null);
     if (!empty($items)) {
         return $items;
     }
-    return [
+    $fallback = [
         [
             'slug' => 'projeto-ia-educacao',
             'title' => 'IA aplicada ao apoio ao ensino',
             'project_type' => 'pesquisa',
             'summary' => 'Projeto focado em modelos de aprendizado de maquina para suporte a atividades educacionais.',
+            'description' => 'Projeto focado em modelos de aprendizado de maquina para suporte a atividades educacionais.',
+            'image_url' => '/assets/images/carousel/tech-circuit.jpg',
             'site_url' => '',
             'coordinator' => 'DECOM/UFOP',
         ],
@@ -2265,10 +2459,119 @@ function research_projects_data(): array {
             'title' => 'Cultura digital e formacao em tecnologia',
             'project_type' => 'extensao',
             'summary' => 'Projeto de extensao com oficinas e atividades para aproximar comunidade e computacao.',
+            'description' => 'Projeto de extensao com oficinas e atividades para aproximar comunidade e computacao.',
+            'image_url' => '/assets/images/carousel/decom-campus.png',
+            'site_url' => '',
+            'coordinator' => 'DECOM/UFOP',
+        ],
+        [
+            'slug' => 'laboratorio-ciencia-dados',
+            'title' => 'Laboratorio de Ciencia de Dados',
+            'project_type' => 'laboratorio',
+            'summary' => 'Ambiente de pesquisa aplicada em analise de dados, IA e visualizacao.',
+            'description' => 'Ambiente de pesquisa aplicada em analise de dados, IA e visualizacao.',
+            'image_url' => '/assets/images/carousel/tech-circuit.jpg',
+            'site_url' => '',
+            'coordinator' => 'DECOM/UFOP',
+        ],
+        [
+            'slug' => 'programa-iniciacao-cientifica',
+            'title' => 'Programa de Iniciacao Cientifica',
+            'project_type' => 'iniciacao-cientifica',
+            'summary' => 'Projetos orientados com bolsas e acompanhamento de docentes do departamento.',
+            'description' => 'Projetos orientados com bolsas e acompanhamento de docentes do departamento.',
+            'image_url' => '/assets/images/carousel/decom-campus.png',
             'site_url' => '',
             'coordinator' => 'DECOM/UFOP',
         ],
     ];
+    if ($projectType === null || $projectType === '') {
+        return $fallback;
+    }
+    return array_values(array_filter($fallback, static function (array $item) use ($projectType): bool {
+        return (string)($item['project_type'] ?? '') === $projectType;
+    }));
+}
+
+function ensure_research_projects_tables(): void {
+    static $ready = false;
+    if ($ready) {
+        return;
+    }
+    $ready = true;
+    try {
+        db()->exec(
+            "CREATE TABLE IF NOT EXISTS research_project_images (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                project_id INT NOT NULL,
+                image_url VARCHAR(600) NOT NULL,
+                caption VARCHAR(255) DEFAULT NULL,
+                sort_order INT NOT NULL DEFAULT 0,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                CONSTRAINT fk_project_images_project
+                    FOREIGN KEY (project_id) REFERENCES research_projects(id)
+                    ON DELETE CASCADE
+            ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
+        );
+    } catch (Throwable $e) {
+        error_log('Failed ensuring research_project_images table: ' . $e->getMessage());
+    }
+
+    try {
+        $columns = db()->query("SHOW COLUMNS FROM research_projects")->fetchAll();
+        $hasDescription = false;
+        $hasImage = false;
+        foreach ($columns as $column) {
+            $field = (string)($column['Field'] ?? '');
+            if ($field === 'description') {
+                $hasDescription = true;
+            }
+            if ($field === 'image_url') {
+                $hasImage = true;
+            }
+        }
+        if (!$hasDescription) {
+            db()->exec("ALTER TABLE research_projects ADD COLUMN description MEDIUMTEXT NULL AFTER summary");
+        }
+        if (!$hasImage) {
+            db()->exec("ALTER TABLE research_projects ADD COLUMN image_url VARCHAR(600) NULL AFTER description");
+        }
+    } catch (Throwable $e) {
+        error_log('Failed ensuring research_projects columns: ' . $e->getMessage());
+    }
+}
+
+function research_project_images_by_project_id(int $projectId): array {
+    ensure_research_projects_tables();
+    if ($projectId <= 0) {
+        return [];
+    }
+    try {
+        $stmt = db()->prepare(
+            'SELECT image_url, caption
+             FROM research_project_images
+             WHERE project_id = :project_id
+             ORDER BY sort_order ASC, id ASC'
+        );
+        $stmt->execute([':project_id' => $projectId]);
+        $rows = $stmt->fetchAll() ?: [];
+        $images = [];
+        foreach ($rows as $row) {
+            $url = trim((string)($row['image_url'] ?? ''));
+            if ($url === '') {
+                continue;
+            }
+            $images[] = [
+                'image_url' => $url,
+                'caption' => trim((string)($row['caption'] ?? '')),
+            ];
+        }
+        return $images;
+    } catch (Throwable $e) {
+        error_log('Failed loading research project images: ' . $e->getMessage());
+        return [];
+    }
 }
 function course_data(string $slug): array {
     $courses = [

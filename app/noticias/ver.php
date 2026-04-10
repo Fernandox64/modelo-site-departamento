@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 require __DIR__ . '/../includes/config.php';
 
 $item = isset($_GET['slug']) ? find_demo_item((string)$_GET['slug']) : null;

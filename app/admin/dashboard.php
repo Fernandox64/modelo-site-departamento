@@ -27,6 +27,7 @@ $peopleCount = admin_count_table('people_items');
     <title>Admin Dashboard</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-rc3/dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="/assets/css/admin.css">
 </head>
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
 <div class="app-wrapper">
@@ -54,27 +55,30 @@ $peopleCount = admin_count_table('people_items');
         <div class="sidebar-wrapper">
             <nav class="mt-2">
                 <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu">
-                    <li class="nav-item"><a href="/admin/dashboard.php" class="nav-link active"><p>Dashboard</p></a></li>
-                    <li class="nav-item"><a href="/admin/content.php?type=noticias" class="nav-link"><p>Noticias</p></a></li>
-                    <li class="nav-item"><a href="/admin/content.php?type=editais" class="nav-link"><p>Editais</p></a></li>
-                    <li class="nav-item"><a href="/admin/content.php?type=defesas" class="nav-link"><p>Defesas</p></a></li>
-                    <li class="nav-item"><a href="/admin/content.php?type=estagios" class="nav-link"><p>Estagios e Empregos</p></a></li>
-                    <li class="nav-item"><a href="/admin/pessoal.php" class="nav-link"><p>Pessoal</p></a></li>
-                    <li class="nav-item"><a href="/admin/atendimento-docentes.php" class="nav-link"><p>Atendimento Docentes</p></a></li>
-                    <li class="nav-item"><a href="/admin/menu.php" class="nav-link"><p>Menu Principal</p></a></li>
-                    <li class="nav-item"><a href="/admin/decom-chefia.php" class="nav-link"><p>Chefia DECOM</p></a></li>
-                    <li class="nav-item"><a href="/admin/carousel.php" class="nav-link"><p>Carrossel Home</p></a></li>
-                    <li class="nav-item"><a href="/admin/horarios.php" class="nav-link"><p>Horarios de Aula</p></a></li>
+                    <li class="nav-item menu-open">
+                        <a href="#" class="nav-link">
+                            <p>Site da Graduacao</p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item"><a href="/admin/site-graduacao.php" class="nav-link"><p>Painel da Graduacao</p></a></li>
+                            <li class="nav-item"><a href="/admin/content.php?type=noticias" class="nav-link"><p>Noticias</p></a></li>
+                            <li class="nav-item"><a href="/admin/content.php?type=editais" class="nav-link"><p>Editais</p></a></li>
+                            <li class="nav-item"><a href="/admin/content.php?type=defesas" class="nav-link"><p>Defesas</p></a></li>
+                            <li class="nav-item"><a href="/admin/content.php?type=estagios" class="nav-link"><p>Estagios e Empregos</p></a></li>
+                            <li class="nav-item"><a href="/admin/pessoal.php" class="nav-link"><p>Pessoal</p></a></li>
+                            <li class="nav-item"><a href="/admin/atendimento-docentes.php" class="nav-link"><p>Atendimento Docentes</p></a></li>
+                    <li class="nav-item"><a href="/admin/logo.php" class="nav-link"><p>Logo do Site</p></a></li>
+                            <li class="nav-item"><a href="/admin/decom-chefia.php" class="nav-link"><p>Chefia DECOM</p></a></li>
+                            <li class="nav-item"><a href="/admin/contato.php" class="nav-link"><p>Contato</p></a></li>
+                            <li class="nav-item"><a href="/admin/carousel.php" class="nav-link"><p>Carrousel de Imagens Home</p></a></li>
+                            <li class="nav-item"><a href="/admin/horarios.php" class="nav-link"><p>Horarios de Aula</p></a></li>
+                    <li class="nav-item"><a href="/admin/pesquisa.php" class="nav-link"><p>Pesquisa</p></a></li>
+                    <li class="nav-item"><a href="/admin/extensao.php" class="nav-link"><p>Extensao</p></a></li>
+                    <li class="nav-item"><a href="/admin/projetos.php" class="nav-link"><p>Projetos</p></a></li>
                     <li class="nav-item"><a href="/admin/pesquisa-iniciacao-cientifica.php" class="nav-link"><p>Iniciacao Cientifica</p></a></li>
-                    <li class="nav-item"><a href="/admin/pos-graduacao.php" class="nav-link"><p>Pos-graduacao</p></a></li>
-                    <li class="nav-item"><a href="/admin/pos-publicacoes.php?tipo=noticias" class="nav-link"><p>Noticias/Editais Pos</p></a></li>
-                    <li class="nav-item"><a href="/admin/pos-subsite.php" class="nav-link"><p>Subsite Pos</p></a></li>
+                        </ul>
+                    </li>
                     <?php if (admin_can('manage_users')): ?><li class="nav-item"><a href="/admin/users.php" class="nav-link"><p>Usuarios e Permissoes</p></a></li><?php endif; ?>
-                    <li class="nav-item"><a href="/health.php" class="nav-link" target="_blank" rel="noopener"><p>Health</p></a></li>
-                    <li class="nav-item"><a href="/noticias/index.php" class="nav-link" target="_blank" rel="noopener"><p>Ver Noticias</p></a></li>
-                    <li class="nav-item"><a href="/noticias/editais.php" class="nav-link" target="_blank" rel="noopener"><p>Ver Editais</p></a></li>
-                    <li class="nav-item"><a href="/noticias/defesas.php" class="nav-link" target="_blank" rel="noopener"><p>Ver Defesas</p></a></li>
-                    <li class="nav-item"><a href="/noticias/estagios-empregos.php" class="nav-link" target="_blank" rel="noopener"><p>Ver Estagios e Empregos</p></a></li>
                 </ul>
             </nav>
         </div>
@@ -122,6 +126,15 @@ $peopleCount = admin_count_table('people_items');
                     </div>
                     <div class="col-md-6">
                         <div class="card card-primary card-outline">
+                            <div class="card-header"><h3 class="card-title">Contato</h3></div>
+                            <div class="card-body">
+                                <p class="mb-2">Configure dados publicos e email que recebe o formulario de contato.</p>
+                                <a class="btn btn-primary" href="/admin/contato.php">Gerenciar Contato</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card card-primary card-outline">
                             <div class="card-header"><h3 class="card-title">Horarios de Aula</h3></div>
                             <div class="card-body">
                                 <p class="mb-2">Edite e importe os horarios de alunos pela pagina oficial antiga.</p>
@@ -160,11 +173,11 @@ $peopleCount = admin_count_table('people_items');
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="card card-success card-outline">
-                            <div class="card-header"><h3 class="card-title">Menu Principal</h3></div>
+                        <div class="card card-primary card-outline">
+                            <div class="card-header"><h3 class="card-title">Logo do Site</h3></div>
                             <div class="card-body">
-                                <p class="mb-2">Edite os itens de navegaÃ§Ã£o de GraduaÃ§Ã£o e PÃ³s-graduaÃ§Ã£o.</p>
-                                <a class="btn btn-success" href="/admin/menu.php">Gerenciar Menu</a>
+                                <p class="mb-2">Ajuste a imagem e o tamanho da logo exibida no cabecalho.</p>
+                                <a class="btn btn-primary" href="/admin/logo.php">Gerenciar Logo</a>
                             </div>
                         </div>
                     </div>
@@ -177,33 +190,6 @@ $peopleCount = admin_count_table('people_items');
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="card card-info card-outline">
-                            <div class="card-header"><h3 class="card-title">Pos-graduacao</h3></div>
-                            <div class="card-body">
-                                <p class="mb-2">Edite secoes da pagina de pos e gerencie egressos por ano.</p>
-                                <a class="btn btn-info text-white" href="/admin/pos-graduacao.php">Gerenciar Pos-graduacao</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card card-danger card-outline">
-                            <div class="card-header"><h3 class="card-title">Publicacoes da Pos</h3></div>
-                            <div class="card-body">
-                                <p class="mb-2">Postagem separada de noticias e editais da pos-graduacao.</p>
-                                <a class="btn btn-danger" href="/admin/pos-publicacoes.php?tipo=noticias">Gerenciar Noticias/Editais da Pos</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card card-dark card-outline">
-                            <div class="card-header"><h3 class="card-title">Subsite Pos</h3></div>
-                            <div class="card-body">
-                                <p class="mb-2">Importe e gerencie paginas institucionais da pos antiga em /pos.</p>
-                                <a class="btn btn-dark" href="/admin/pos-subsite.php">Gerenciar Subsite Pos</a>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -213,4 +199,7 @@ $peopleCount = admin_count_table('people_items');
 <script src="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-rc3/dist/js/adminlte.min.js"></script>
 </body>
 </html>
+
+
+
 

@@ -174,6 +174,7 @@ $items = $itemsStmt->fetchAll();
     <title>Admin - <?= e($meta['title']) ?></title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-rc3/dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="/assets/css/admin.css">
     <script src="https://cdn.jsdelivr.net/npm/tinymce@7.9.1/tinymce.min.js" referrerpolicy="origin"></script>
 </head>
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
@@ -182,7 +183,6 @@ $items = $itemsStmt->fetchAll();
         <div class="container-fluid">
             <ul class="navbar-nav">
                 <li class="nav-item"><a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">Menu</a></li>
-                <li class="nav-item d-none d-md-block"><a href="/admin/dashboard.php" class="nav-link">Dashboard</a></li>
             </ul>
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
@@ -202,23 +202,22 @@ $items = $itemsStmt->fetchAll();
         <div class="sidebar-wrapper">
             <nav class="mt-2">
                 <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu">
-                    <li class="nav-item"><a href="/admin/dashboard.php" class="nav-link"><p>Dashboard</p></a></li>
+                    <li class="nav-item"><a href="/admin/site-graduacao.php" class="nav-link"><p>Site da Graduacao</p></a></li>
                     <li class="nav-item"><a href="/admin/content.php?type=noticias" class="nav-link<?= $type === 'noticias' ? ' active' : '' ?>"><p>Noticias</p></a></li>
                     <li class="nav-item"><a href="/admin/content.php?type=editais" class="nav-link<?= $type === 'editais' ? ' active' : '' ?>"><p>Editais</p></a></li>
                     <li class="nav-item"><a href="/admin/content.php?type=defesas" class="nav-link<?= $type === 'defesas' ? ' active' : '' ?>"><p>Defesas</p></a></li>
                     <li class="nav-item"><a href="/admin/content.php?type=estagios" class="nav-link<?= $type === 'estagios' ? ' active' : '' ?>"><p>Estagios e Empregos</p></a></li>
                     <li class="nav-item"><a href="/admin/pessoal.php" class="nav-link"><p>Pessoal</p></a></li>
                     <li class="nav-item"><a href="/admin/atendimento-docentes.php" class="nav-link"><p>Atendimento Docentes</p></a></li>
-                    <li class="nav-item"><a href="/admin/menu.php" class="nav-link"><p>Menu Principal</p></a></li>
+                    <li class="nav-item"><a href="/admin/logo.php" class="nav-link"><p>Logo do Site</p></a></li>
                     <li class="nav-item"><a href="/admin/decom-chefia.php" class="nav-link"><p>Chefia DECOM</p></a></li>
-                    <li class="nav-item"><a href="/admin/carousel.php" class="nav-link"><p>Carrossel Home</p></a></li>
+                    <li class="nav-item"><a href="/admin/carousel.php" class="nav-link"><p>Carrousel de Imagens Home</p></a></li>
                     <li class="nav-item"><a href="/admin/horarios.php" class="nav-link"><p>Horarios de Aula</p></a></li>
+                    <li class="nav-item"><a href="/admin/pesquisa.php" class="nav-link"><p>Pesquisa</p></a></li>
+                    <li class="nav-item"><a href="/admin/extensao.php" class="nav-link"><p>Extensao</p></a></li>
+                    <li class="nav-item"><a href="/admin/projetos.php" class="nav-link"><p>Projetos</p></a></li>
                     <li class="nav-item"><a href="/admin/pesquisa-iniciacao-cientifica.php" class="nav-link"><p>Iniciacao Cientifica</p></a></li>
-                    <li class="nav-item"><a href="/admin/pos-graduacao.php" class="nav-link"><p>Pos-graduacao</p></a></li>
-                    <li class="nav-item"><a href="/admin/pos-publicacoes.php?tipo=noticias" class="nav-link"><p>Noticias/Editais Pos</p></a></li>
-                    <li class="nav-item"><a href="/admin/pos-subsite.php" class="nav-link"><p>Subsite Pos</p></a></li>
                     <?php if (admin_can('manage_users')): ?><li class="nav-item"><a href="/admin/users.php" class="nav-link"><p>Usuarios e Permissoes</p></a></li><?php endif; ?>
-                    <li class="nav-item"><a href="/health.php" class="nav-link" target="_blank" rel="noopener"><p>Health</p></a></li>
                 </ul>
             </nav>
         </div>
@@ -349,7 +348,7 @@ tinymce.init({
   paste_webkit_styles: 'none',
   paste_merge_formats: true,
   paste_preprocess: function (plugin, args) {
-    // Limpa marcas comuns do Word/Docs mantendo estrutura semÃ¢ntica.
+    // Limpa marcas comuns do Word/Docs mantendo estrutura semantica.
     args.content = args.content
       .replace(/<!--[\s\S]*?-->/g, '')
       .replace(/\sclass=("|\')[^"\']*("|\')/gi, '')
@@ -369,4 +368,9 @@ tinymce.init({
 </script>
 </body>
 </html>
+
+
+
+
+
 

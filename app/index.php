@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 require __DIR__ . '/includes/config.php';
 
 $news = [];
@@ -13,11 +13,9 @@ try {
 } catch (Throwable $e) {
     $news = array_slice(demo_news(), 0, 4);
 }
-$editais = array_slice(demo_editais(), 0, 6);
+$editaisCards = array_slice(demo_editais(), 0, 2);
 $defesas = demo_defesas();
 $jobs = demo_jobs();
-$menuGraduacao = primary_menu_item('graduacao');
-$menuPosGraduacao = primary_menu_item('pos_graduacao');
 $heroSlides = hero_carousel_get();
 $academicCalendar = academic_calendar_fetch_ufop();
 $calendarYear = (int)($academicCalendar['year'] ?? (int)date('Y'));
@@ -27,10 +25,10 @@ $calendarSourcePage = (string)($academicCalendar['source_page'] ?? 'https://www.
 
 page_header('Inicio');
 ?>
-<section class="hero py-5">
+<section class="hero py-4">
     <div class="container">
-        <div class="row g-4 align-items-center">
-            <div class="col-lg-7">
+        <div class="row">
+            <div class="col-12">
                 <div id="heroCarousel" class="carousel slide hero-carousel shadow-lg" data-bs-ride="carousel">
                     <div class="carousel-indicators">
                         <?php foreach ($heroSlides as $idx => $slide): ?>
@@ -77,20 +75,6 @@ page_header('Inicio');
                     </button>
                 </div>
             </div>
-            <div class="col-lg-5">
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <h2 class="h5">Acesso rapido</h2>
-                        <div class="list-group list-group-flush">
-                            <a class="list-group-item list-group-item-action bg-transparent text-white" href="/pessoal/docentes.php">Docentes</a>
-                            <a class="list-group-item list-group-item-action bg-transparent text-white" href="/ensino/ciencia-computacao.php">Curso de Ciencia da Computacao</a>
-                            <a class="list-group-item list-group-item-action bg-transparent text-white" href="/ensino/inteligencia-artificial.php">Curso de Inteligencia Artificial</a>
-                            <a class="list-group-item list-group-item-action bg-transparent text-white" href="<?= e((string)$menuGraduacao['url']) ?>"><?= e((string)$menuGraduacao['label']) ?></a>
-                            <a class="list-group-item list-group-item-action bg-transparent text-white" href="<?= e((string)$menuPosGraduacao['url']) ?>"><?= e((string)$menuPosGraduacao['label']) ?></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </section>
@@ -113,9 +97,37 @@ page_header('Inicio');
                     </div>
                 <?php endforeach; ?>
             </div>
+
+            <h2 class="section-title h4 mt-4 mb-3">Editais</h2>
+            <div class="row g-3">
+                <?php foreach ($editaisCards as $item): ?>
+                    <div class="col-md-6">
+                        <a class="card card-link h-100 shadow-sm overflow-hidden" href="/noticias/ver.php?slug=<?= urlencode($item['slug']) ?>">
+                            <img class="news-card-cover" src="<?= e(content_image($item)) ?>" alt="<?= e($item['title']) ?>">
+                            <div class="card-body">
+                                <span class="badge text-bg-secondary"><?= e($item['category']) ?></span>
+                                <h3 class="h5 mt-2"><?= e($item['title']) ?></h3>
+                                <p class="text-muted mb-0"><?= e($item['summary']) ?></p>
+                            </div>
+                        </a>
+                    </div>
+                <?php endforeach; ?>
+            </div>
         </div>
 
         <div class="col-lg-4">
+            <div class="card shadow-sm mb-4 side-widget">
+                <div class="card-body">
+                    <h2 class="h5">Acesso rapido</h2>
+                    <div class="list-group list-group-flush">
+                        <a class="list-group-item list-group-item-action bg-transparent side-widget-link" href="/pessoal/docentes.php">Docentes</a>
+                        <a class="list-group-item list-group-item-action bg-transparent side-widget-link" href="/ensino/ciencia-computacao.php">Curso de Ciencia da Computacao</a>
+                        <a class="list-group-item list-group-item-action bg-transparent side-widget-link" href="/ensino/inteligencia-artificial.php">Curso de Inteligencia Artificial</a>
+                        <a class="list-group-item list-group-item-action bg-transparent side-widget-link" href="<?= e((string)$menuGraduacao['url']) ?>"><?= e((string)$menuGraduacao['label']) ?></a>
+                    </div>
+                </div>
+            </div>
+
             <div class="card shadow-sm mb-4 side-widget">
                 <div class="card-body">
                     <h2 class="h5">Acesso do Aluno</h2>
@@ -158,7 +170,7 @@ page_header('Inicio');
                     </div>
                 </div>
             </div>
-            <?php foreach (['Editais' => $editais, 'Defesas' => $defesas, 'Estagios e Empregos' => $jobs] as $title => $items): ?>
+            <?php foreach (['Defesas' => $defesas, 'Estagios e Empregos' => $jobs] as $title => $items): ?>
                 <div class="card shadow-sm mb-4 side-widget">
                     <div class="card-body">
                         <h2 class="h5"><?= e($title) ?></h2>
@@ -188,21 +200,6 @@ page_header('Inicio');
         </div>
     </div>
 
-    <div class="card news-card mt-4">
-        <div class="card-body d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
-            <div>
-                <h2 class="h4 mb-2">Pos-graduacao em Computacao (PPGCC)</h2>
-                <p class="mb-0 text-muted">
-                    As noticias e editais da pos agora ficam em paginas separadas, exclusivas da pos-graduacao.
-                </p>
-            </div>
-            <div class="d-flex gap-2 flex-wrap">
-                <a class="btn btn-outline-primary btn-sm" href="/ensino/pos-noticias.php">Noticias da Pos</a>
-                <a class="btn btn-outline-danger btn-sm" href="/ensino/pos-editais.php">Editais da Pos</a>
-                <a class="btn btn-primary btn-sm" href="/ensino/pos-graduacao.php">Pagina da Pos</a>
-            </div>
-        </div>
-    </div>
 </div>
 <script>
     (function () {

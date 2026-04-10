@@ -24,10 +24,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $role = admin_normalize_role((string)($_POST['role'] ?? 'editor'));
 
                 if ($name === '' || $email === '' || $password === '') {
-                    throw new RuntimeException('Nome, e-mail e senha são obrigatórios.');
+                    throw new RuntimeException('Nome, e-mail e senha sao obrigatorios.');
                 }
                 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                    throw new RuntimeException('Informe um e-mail válido.');
+                    throw new RuntimeException('Informe um e-mail valido.');
                 }
                 $passwordError = admin_validate_password_strength($password);
                 if ($passwordError !== null) {
@@ -56,13 +56,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $isActive = isset($_POST['is_active']) ? 1 : 0;
 
                 if ($id <= 0 || $name === '' || $email === '') {
-                    throw new RuntimeException('Dados inválidos para atualização.');
+                    throw new RuntimeException('Dados invalidos para atualizacao.');
                 }
                 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                    throw new RuntimeException('Informe um e-mail válido.');
+                    throw new RuntimeException('Informe um e-mail valido.');
                 }
                 if ((int)$current['id'] === $id && $isActive !== 1) {
-                    throw new RuntimeException('Você não pode desativar sua própria conta.');
+                    throw new RuntimeException('Voce nao pode desativar sua propria conta.');
                 }
 
                 $stmt = db()->prepare(
@@ -85,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $id = (int)($_POST['id'] ?? 0);
                 $newPassword = (string)($_POST['new_password'] ?? '');
                 if ($id <= 0) {
-                    throw new RuntimeException('Conta inválida para redefinição de senha.');
+                    throw new RuntimeException('Conta invalida para redefinicao de senha.');
                 }
                 $passwordError = admin_validate_password_strength($newPassword);
                 if ($passwordError !== null) {
@@ -118,9 +118,10 @@ $users = db()->query(
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Admin - Usuários</title>
+    <title>Admin - Usuarios</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-rc3/dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="/assets/css/admin.css">
 </head>
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
 <div class="app-wrapper">
@@ -128,7 +129,6 @@ $users = db()->query(
         <div class="container-fluid">
             <ul class="navbar-nav">
                 <li class="nav-item"><a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">Menu</a></li>
-                <li class="nav-item d-none d-md-block"><a href="/admin/dashboard.php" class="nav-link">Dashboard</a></li>
             </ul>
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
@@ -147,23 +147,24 @@ $users = db()->query(
         </div>
         <div class="sidebar-wrapper">
             <nav class="mt-2">
-                <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu">
-                    <li class="nav-item"><a href="/admin/dashboard.php" class="nav-link"><p>Dashboard</p></a></li>
+                                                <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu">
+                    <li class="nav-item"><a href="/admin/site-graduacao.php" class="nav-link"><p>Site da Graduacao</p></a></li>
                     <li class="nav-item"><a href="/admin/content.php?type=noticias" class="nav-link"><p>Noticias</p></a></li>
                     <li class="nav-item"><a href="/admin/content.php?type=editais" class="nav-link"><p>Editais</p></a></li>
                     <li class="nav-item"><a href="/admin/content.php?type=defesas" class="nav-link"><p>Defesas</p></a></li>
                     <li class="nav-item"><a href="/admin/content.php?type=estagios" class="nav-link"><p>Estagios e Empregos</p></a></li>
                     <li class="nav-item"><a href="/admin/pessoal.php" class="nav-link"><p>Pessoal</p></a></li>
                     <li class="nav-item"><a href="/admin/atendimento-docentes.php" class="nav-link"><p>Atendimento Docentes</p></a></li>
-                    <li class="nav-item"><a href="/admin/menu.php" class="nav-link"><p>Menu Principal</p></a></li>
+                    <li class="nav-item"><a href="/admin/logo.php" class="nav-link"><p>Logo do Site</p></a></li>
                     <li class="nav-item"><a href="/admin/decom-chefia.php" class="nav-link"><p>Chefia DECOM</p></a></li>
-                    <li class="nav-item"><a href="/admin/carousel.php" class="nav-link"><p>Carrossel Home</p></a></li>
+                    <li class="nav-item"><a href="/admin/contato.php" class="nav-link"><p>Contato</p></a></li>
+                    <li class="nav-item"><a href="/admin/carousel.php" class="nav-link"><p>Carrousel de Imagens Home</p></a></li>
                     <li class="nav-item"><a href="/admin/horarios.php" class="nav-link"><p>Horarios de Aula</p></a></li>
-                    <li class="nav-item"><a href="/admin/pos-graduacao.php" class="nav-link"><p>Pos-graduacao</p></a></li>
-                    <li class="nav-item"><a href="/admin/pos-publicacoes.php?tipo=noticias" class="nav-link"><p>Noticias/Editais Pos</p></a></li>
-                    <li class="nav-item"><a href="/admin/pos-subsite.php" class="nav-link"><p>Subsite Pos</p></a></li>
-                    <li class="nav-item"><a href="/admin/users.php" class="nav-link active"><p>Usuários e Permissões</p></a></li>
-                    <li class="nav-item"><a href="/health.php" class="nav-link" target="_blank" rel="noopener"><p>Health</p></a></li>
+                    <li class="nav-item"><a href="/admin/pesquisa.php" class="nav-link"><p>Pesquisa</p></a></li>
+                    <li class="nav-item"><a href="/admin/extensao.php" class="nav-link"><p>Extensao</p></a></li>
+                    <li class="nav-item"><a href="/admin/projetos.php" class="nav-link"><p>Projetos</p></a></li>
+                    <li class="nav-item"><a href="/admin/pesquisa-iniciacao-cientifica.php" class="nav-link"><p>Iniciacao Cientifica</p></a></li>
+                    <li class="nav-item"><a href="/admin/users.php" class="nav-link active"><p>Usuarios e Permissoes</p></a></li>
                 </ul>
             </nav>
         </div>
@@ -172,7 +173,7 @@ $users = db()->query(
     <main class="app-main">
         <div class="app-content-header">
             <div class="container-fluid">
-                <h3 class="mb-0">Gerenciar Usuários e Permissões</h3>
+                <h3 class="mb-0">Gerenciar Usuarios e Permissoes</h3>
             </div>
         </div>
         <div class="app-content">
@@ -224,9 +225,9 @@ $users = db()->query(
                                 <th>E-mail</th>
                                 <th>Perfil</th>
                                 <th>Status</th>
-                                <th>Último login</th>
+                                <th>Ultimo login</th>
                                 <th>Criado em</th>
-                                <th class="text-end">Ações</th>
+                                <th class="text-end">Acoes</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -258,7 +259,7 @@ $users = db()->query(
                                                 <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
                                                 <input type="hidden" name="action" value="update">
                                                 <input type="hidden" name="id" value="<?= e((string)$u['id']) ?>">
-                                                <div class="modal-header"><h5 class="modal-title">Editar usuário</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+                                                <div class="modal-header"><h5 class="modal-title">Editar usuario</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
                                                 <div class="modal-body">
                                                     <div class="mb-2">
                                                         <label class="form-label">Nome</label>
@@ -323,3 +324,6 @@ $users = db()->query(
 <script src="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-rc3/dist/js/adminlte.min.js"></script>
 </body>
 </html>
+
+
+
